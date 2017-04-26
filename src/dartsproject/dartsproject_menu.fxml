@@ -1,0 +1,52 @@
+<!--
+
+ File name:
+     dartsproject_menu.fxml
+
+ ====================
+ Description:
+
+
+ ====================
+ Sources:
+
+ ====================
+ Author:
+     Mehdi Rouijel
+
+-->
+
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+
+
+<MenuBar fx:controller="dartsproject.MenuController"
+         xmlns:fx="http://javafx.com/fxml"
+         fx:id="menuBar">
+    <menus>
+        <Menu text="File">
+            <items>
+                <MenuItem text="Open..." onAction="#chooseFile" />
+                <MenuItem text="Save" />
+                <MenuItem text="Save as..." />
+                <SeparatorMenuItem />
+                <MenuItem text="Exit" onAction="#killApp" />
+            </items>
+        </Menu>
+        <Menu text="Edit">
+            <items>
+                <MenuItem text="Copy" />
+                <MenuItem text="Cut" />
+                <MenuItem text="Paste" />
+            </items>
+        </Menu>
+        <Menu text="Help">
+            <items>
+                <MenuItem text="Manual" />
+                <MenuItem text="About" />
+            </items>
+        </Menu>
+    </menus>
+</MenuBar>

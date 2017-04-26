@@ -16,23 +16,21 @@
 
 -->
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.GridPane?>
-
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-
-
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.image.ImageView?>
-<GridPane fx:controller="dartsproject.Controller"
-          xmlns:fx="http://javafx.com/fxml"
-          alignment="center"
-          hgap="10"
-          vgap="10">
-    <children>
+
+
+<BorderPane fx:controller="dartsproject.MainController"
+            xmlns:fx="http://javafx.com/fxml">
+    <top>
+        <!--<VBox id="topPane" prefHeight="20">-->
+            <fx:include fx:id="menu" source="dartsproject_menu.fxml" />
+        <!--</VBox>-->
+    </top>
+    <center>
         <ImageView fx:id="imageView"
                    fitHeight="300.0"
                    preserveRatio="true">
         </ImageView>
-    </children>
-</GridPane>
+    </center>
+</BorderPane>
