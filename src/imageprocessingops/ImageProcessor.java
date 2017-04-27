@@ -1,3 +1,20 @@
+/*
+ *  File name:
+ *      ImageProcessor.java
+ *
+ *  ====================
+ *  Description:
+ *
+ *
+ *  ====================
+ *  Sources:
+ *
+ *  ====================
+ *  Author:
+ *      Mehdi Rouijel
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 package imageprocessingops;
 
 import java.awt.*;
@@ -5,15 +22,14 @@ import java.awt.image.BufferedImage;
 
 import imageprocessingops.convolution.ConvoKernel;
 import imageprocessingops.math.Matrix;
-import javafx.scene.image.*;
 
 
 public class
 ImageProcessor
 {
 
-    private ConvoKernel kernel = null;
     private BufferedImage inputImage = null;
+    private ConvoKernel kernel = null;
 
     public
     ImageProcessor()
@@ -136,5 +152,66 @@ ImageProcessor
 
         return imageChunk;
     }
+
+
+    public BufferedImage
+    runHough( BufferedImage inputImage )
+    {
+        int width = inputImage.getWidth();
+        int height = inputImage.getHeight();
+        int maxDistance = ( int )Math.sqrt( width*width + height*height );
+
+        int accumulatorWidth = 180;
+        int accumulatorHeight = maxDistance;
+        // NOTE: 2D array should have every element initialised to 0.
+        int[][] accumulator = new int[ accumulatorHeight ][ accumulatorWidth ];
+        BufferedImage houghSpace = new BufferedImage( accumulatorWidth,
+                                                      accumulatorHeight,
+                                                      BufferedImage.TYPE_INT_RGB );
+        int maxValue = 0;
+
+        for ( int y = 0; y < height; ++y )
+        {
+            for ( int x = 0; x < width; ++x )
+            {
+                if ( inputImage.getRGB( x, y ) != -16777216 )
+                {
+                    for ( int theta = 0; theta < 180; ++theta )
+                    {
+                        int rho = ( int )(
+                            x*Math.cos( ( theta * Math.PI ) / 180.0 ) +
+                            y*Math.sin( ( theta * Math.PI ) / 180.0 )
+                        );
+
+                        if ( ( rho > 0 ) && ( rho <= maxDistance ) )
+                        {
+                            accumulator[ rho ][ theta ] = accumulator[ rho ][ theta ] + 1;
+
+                            if ( accumulator[ rho ][ theta ] > maxValue )
+                            {
+                                maxValue = accumulator[ rho ][ theta ];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        int x = 0;
+        int y = 0;
+        for ( int row = 0; row < accumulatorHeight; ++row )
+        {
+            for ( int col = 0; col < accumulatorWidth; ++col )
+            {
+                int v = 255 * accumulator[ row ][ col ] / maxValue;
+                //int v = 255 - ( int )value;
+                //houghSpace.setRGB( col, row, Color.HSBtoRGB( 0.0f, 0.0f, v ) );
+                houghSpace.setRGB( col, row, new Color( v, v, v ).getRGB() );
+            }
+        }
+
+        return houghSpace;
+    }
+
 
 }

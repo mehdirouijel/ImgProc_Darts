@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
 <!--
 
  File name:
@@ -17,13 +19,15 @@
 -->
 
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8.0.112"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="dartsproject.MainController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dartsproject.MainController">
     <top>
         <fx:include fx:id="menu" source="dartsproject_menu.fxml" />
     </top>
@@ -34,10 +38,52 @@
         <fx:include fx:id="ops" source="dartsproject_ops.fxml" />
     </right>
     <center>
-        <HBox>
+        <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="900.0" BorderPane.alignment="CENTER">
             <children>
-                <ImageView fx:id="imageView" fitWidth="300.0" preserveRatio="true" />
-                <ImageView fx:id="previewView" fitWidth="300.0" preserveRatio="true" />
+                <TitledPane animated="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="500.0" text="Original Image" HBox.hgrow="ALWAYS">
+                    <content>
+                        <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0">
+                            <center>
+                                <ImageView fx:id="imageView" fitWidth="300.0" preserveRatio="true" BorderPane.alignment="CENTER" />
+                            </center>
+                        </BorderPane>
+                    </content>
+                </TitledPane>
+                <TabPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="500.0" tabClosingPolicy="UNAVAILABLE" HBox.hgrow="ALWAYS">
+                    <tabs>
+                        <Tab text="Edge Detection (Sobel)">
+                            <content>
+                                <BorderPane prefHeight="200.0" prefWidth="200.0">
+                                    <center>
+                                        <ImageView fx:id="sobelView" fitWidth="300.0" preserveRatio="true" BorderPane.alignment="CENTER" />
+                                    </center>
+                                </BorderPane>
+                            </content>
+                        </Tab>
+                        <Tab text="Hough Accumulator">
+                            <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                    <children>
+                                        <BorderPane prefHeight="200.0" prefWidth="200.0">
+                                            <center>
+                                                <ImageView fx:id="accumulatorView" fitWidth="300.0" preserveRatio="true" BorderPane.alignment="CENTER" />
+                                            </center>
+                                        </BorderPane>
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                        </Tab>
+                        <Tab text="Hough Result">
+                            <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                    <children>
+                                        <BorderPane prefHeight="200.0" prefWidth="200.0" />
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                        </Tab>
+                    </tabs>
+                </TabPane>
             </children>
         </HBox>
     </center>

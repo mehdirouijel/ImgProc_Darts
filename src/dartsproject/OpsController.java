@@ -26,7 +26,6 @@ import javafx.scene.control.Button;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -69,8 +68,9 @@ OpsController implements Initializable
             proc.setKernel( new SobelKernel() );
             result = proc.runKernel();
 
-            Context.getInstance().setCurrentPreview( SwingFXUtils.toFXImage( result, null ) );
-            this.mainCtrl.updatePreviewView();
+            //Context.getInstance().setCurrentPreview( SwingFXUtils.toFXImage( result, null ) );
+            this.mainCtrl.updateSobelView( SwingFXUtils.toFXImage( result, null ) );
+
             //try
             //{
             //    ImageIO.write( result, "png", new File( "result.jpg" ) );
@@ -79,6 +79,33 @@ OpsController implements Initializable
             //{
             //    e.printStackTrace();
             //}
+        }
+        catch ( IOException e )
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void
+    runHough()
+    {
+        ImageProcessor proc = new ImageProcessor();
+        BufferedImage loaded = null;
+        BufferedImage sobeled;
+        BufferedImage houghed;
+
+        try
+        {
+            loaded = ImageIO.read( Context.getInstance().getCurrentFile() );
+
+            proc.setInputImage( loaded );
+            proc.setKernel( new SobelKernel() );
+
+            sobeled = proc.runKernel();
+            this.mainCtrl.updateSobelView( SwingFXUtils.toFXImage( sobeled, null ) );
+
+            houghed = proc.runHough( sobeled );
+            this.mainCtrl.updateAccumulatorView( SwingFXUtils.toFXImage( houghed, null ) );
         }
         catch ( IOException e )
         {

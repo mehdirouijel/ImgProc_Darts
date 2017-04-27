@@ -60,7 +60,6 @@ Context
 
     private Stage primaryStage = null;
     private Image currentImage = null;
-    private Image currentPreview = null;
     private String currentImagePath = null;
     private File currentFile = null;
 
@@ -118,16 +117,6 @@ Context
         {
             e.printStackTrace();
         }
-    }
-    public void
-    setCurrentPreview( Image img )
-    {
-        this.currentPreview = img;
-    }
-    public Image
-    getCurrentPreview()
-    {
-        return this.currentPreview;
     }
     public String
     getCurrentImagePath()

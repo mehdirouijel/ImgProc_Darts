@@ -25,8 +25,14 @@
 <VBox fx:id="opsPanel" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="35.0" minWidth="-Infinity" prefWidth="160.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dartsproject.OpsController">
     <children>
         <Button id="btnSobel" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#runSobel" prefHeight="25.0" prefWidth="150.0" text="Run Sobel" textAlignment="CENTER">
-         <VBox.margin>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-         </VBox.margin></Button>
+            <VBox.margin>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </VBox.margin>
+        </Button>
+        <Button id="btnHough" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#runHough" prefHeight="25.0" prefWidth="150.0" text="Run Hough" textAlignment="CENTER">
+            <VBox.margin>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </VBox.margin>
+        </Button>
     </children>
 </VBox>

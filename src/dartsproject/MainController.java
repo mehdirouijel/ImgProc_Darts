@@ -36,7 +36,8 @@ MainController implements Initializable
 {
 
     @FXML private ImageView imageView;
-    @FXML private ImageView previewView;
+    @FXML private ImageView sobelView;
+    @FXML private ImageView accumulatorView;
 
     @FXML private MenuBar menu;
     @FXML private MenuController menuController;
@@ -80,10 +81,15 @@ MainController implements Initializable
         displayedImagePath.setText( Context.getInstance().getCurrentImagePath() );
     }
 
-    public void
-    updatePreviewView()
+    public void updateSobelView( Image img )
     {
-        this.previewView.setImage( Context.getInstance().getCurrentPreview() );
+        //this.sobelView.setImage( Context.getInstance().getCurrentPreview() );
+        this.sobelView.setImage( img );
+    }
+
+    public void updateAccumulatorView( Image img )
+    {
+        this.accumulatorView.setImage( img );
     }
 
 }
