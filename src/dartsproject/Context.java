@@ -1,3 +1,20 @@
+/*
+ *  File name:
+ *      Context.java
+ *
+ *  ====================
+ *  Description:
+ *
+ *
+ *  ====================
+ *  Sources:
+ *
+ *  ====================
+ *  Author:
+ *      Mehdi Rouijel
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 package dartsproject;
 
 
@@ -43,6 +60,7 @@ Context
 
     private Stage primaryStage = null;
     private Image currentImage = null;
+    private String currentImagePath = null;
 
 
     public Image
@@ -50,8 +68,18 @@ Context
     {
         if ( this.currentImage == null )
         {
-            File f = new File( "img/dartboard-23938_960_720.png" );
-            this.currentImage = new Image( f.toURI().toString() );
+            String path = "img/dartboard-23938_960_720.png";
+            File f = new File( path );
+
+            try
+            {
+                this.currentImage = new Image( f.toURI().toURL().toString() );
+                this.currentImagePath = path;
+            }
+            catch ( MalformedURLException e )
+            {
+                e.printStackTrace();
+            }
         }
 
         return this.currentImage;
@@ -61,9 +89,11 @@ Context
     setCurrentImage( String path )
     {
         File f = new File( path );
+
         try
         {
             this.currentImage = new Image( f.toURI().toURL().toString() );
+            this.currentImagePath = path;
         }
         catch( MalformedURLException e )
         {
@@ -75,12 +105,19 @@ Context
     {
         try
         {
-            this.currentImage = new Image( file.toURI().toURL().toString() );
+            String path = file.toURI().toURL().toString();
+            this.currentImage = new Image( path );
+            this.currentImagePath = path;
         }
         catch( MalformedURLException e )
         {
             e.printStackTrace();
         }
+    }
+    public String
+    getCurrentImagePath()
+    {
+        return this.currentImagePath;
     }
 
 

@@ -1,3 +1,20 @@
+/*
+ *  File name:
+ *      MenuController.java
+ *
+ *  ====================
+ *  Description:
+ *
+ *
+ *  ====================
+ *  Sources:
+ *
+ *  ====================
+ *  Author:
+ *      Mehdi Rouijel
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 package dartsproject;
 
 import javafx.fxml.FXML;
@@ -5,7 +22,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.MenuBar;
 import javafx.stage.FileChooser;
 
-import javax.swing.*;
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -50,7 +66,7 @@ MenuController implements Initializable
         if ( selectedFile != null )
         {
             Context.getInstance().setCurrentImage( selectedFile );
-            mainCtrl.setDisplayedImage( Context.getInstance().getCurrentImage() );
+            mainCtrl.updateMainImageView();
         }
     }
 

@@ -1,0 +1,26 @@
+<!--
+
+ File name:
+     dartsproject_ops.fxml
+
+ ====================
+ Description:
+
+
+ ====================
+ Sources:
+
+ ====================
+ Author:
+     Mehdi Rouijel
+
+-->
+
+<?import javafx.scene.layout.VBox?>
+
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="dartsproject.OpsController"
+      fx:id="opsPanel"
+      prefWidth="100">
+</VBox>

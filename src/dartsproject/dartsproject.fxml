@@ -16,21 +16,29 @@
 
 -->
 
-<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 
-
-<BorderPane fx:controller="dartsproject.MainController"
-            xmlns:fx="http://javafx.com/fxml">
+<BorderPane xmlns="http://javafx.com/javafx/8.0.112"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="dartsproject.MainController">
     <top>
-        <!--<VBox id="topPane" prefHeight="20">-->
-            <fx:include fx:id="menu" source="dartsproject_menu.fxml" />
-        <!--</VBox>-->
+        <fx:include fx:id="menu" source="dartsproject_menu.fxml" />
     </top>
+    <bottom>
+        <Label fx:id="displayedImagePath" />
+    </bottom>
+    <right>
+        <fx:include fx:id="ops" source="dartsproject_ops.fxml" />
+    </right>
     <center>
-        <ImageView fx:id="imageView"
-                   fitHeight="300.0"
-                   preserveRatio="true">
-        </ImageView>
+        <HBox>
+            <children>
+                <ImageView fx:id="imageView" fitWidth="300.0" preserveRatio="true" />
+                <ImageView fx:id="previewView" fitWidth="300.0" preserveRatio="true" />
+            </children>
+        </HBox>
     </center>
 </BorderPane>
