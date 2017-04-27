@@ -60,7 +60,9 @@ Context
 
     private Stage primaryStage = null;
     private Image currentImage = null;
+    private Image currentPreview = null;
     private String currentImagePath = null;
+    private File currentFile = null;
 
 
     public Image
@@ -75,6 +77,7 @@ Context
             {
                 this.currentImage = new Image( f.toURI().toURL().toString() );
                 this.currentImagePath = path;
+                this.currentFile = f;
             }
             catch ( MalformedURLException e )
             {
@@ -94,6 +97,7 @@ Context
         {
             this.currentImage = new Image( f.toURI().toURL().toString() );
             this.currentImagePath = path;
+            this.currentFile = f;
         }
         catch( MalformedURLException e )
         {
@@ -108,16 +112,32 @@ Context
             String path = file.toURI().toURL().toString();
             this.currentImage = new Image( path );
             this.currentImagePath = path;
+            this.currentFile = file;
         }
         catch( MalformedURLException e )
         {
             e.printStackTrace();
         }
     }
+    public void
+    setCurrentPreview( Image img )
+    {
+        this.currentPreview = img;
+    }
+    public Image
+    getCurrentPreview()
+    {
+        return this.currentPreview;
+    }
     public String
     getCurrentImagePath()
     {
         return this.currentImagePath;
+    }
+    public File
+    getCurrentFile()
+    {
+        return this.currentFile;
     }
 
 

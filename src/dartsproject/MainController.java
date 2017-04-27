@@ -83,6 +83,7 @@ MainController implements Initializable
     public void
     updatePreviewView()
     {
+        this.previewView.setImage( Context.getInstance().getCurrentPreview() );
     }
 
 }
