@@ -18,6 +18,7 @@
 package dartsproject;
 
 import imageprocessingops.ImageProcessor;
+import imageprocessingops.convolution.BlurKernel;
 import imageprocessingops.convolution.SobelKernel;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
@@ -59,6 +60,8 @@ OpsController implements Initializable
         ImageProcessor proc = new ImageProcessor();
         BufferedImage loaded = null;
         BufferedImage result;
+        BufferedImage sobeled;
+        BufferedImage blured;
 
         try
         {
@@ -66,10 +69,19 @@ OpsController implements Initializable
 
             proc.setInputImage( loaded );
             proc.setKernel( new SobelKernel() );
+            sobeled = proc.runKernel();
+            this.mainCtrl.updateSobelView( SwingFXUtils.toFXImage( sobeled, null ) );
+
+            proc.setKernel( new BlurKernel() );
+            blured = proc.runKernel();
+            this.mainCtrl.updateBlurView( SwingFXUtils.toFXImage( blured, null ) );
+
+            proc.setInputImage( blured );
+            proc.setKernel( new SobelKernel() );
             result = proc.runKernel();
+            this.mainCtrl.updateResultView( SwingFXUtils.toFXImage( result, null ) );
 
             //Context.getInstance().setCurrentPreview( SwingFXUtils.toFXImage( result, null ) );
-            this.mainCtrl.updateSobelView( SwingFXUtils.toFXImage( result, null ) );
 
             //try
             //{
@@ -93,19 +105,23 @@ OpsController implements Initializable
         BufferedImage loaded = null;
         BufferedImage sobeled;
         BufferedImage houghed;
+        BufferedImage lined;
 
         try
         {
             loaded = ImageIO.read( Context.getInstance().getCurrentFile() );
 
             proc.setInputImage( loaded );
-            proc.setKernel( new SobelKernel() );
+            proc.setKernel( new BlurKernel() );
 
             sobeled = proc.runKernel();
             this.mainCtrl.updateSobelView( SwingFXUtils.toFXImage( sobeled, null ) );
 
             houghed = proc.runHough( sobeled );
             this.mainCtrl.updateAccumulatorView( SwingFXUtils.toFXImage( houghed, null ) );
+
+            lined = proc.drawHoughLines( houghed, loaded.getWidth(), loaded.getHeight() );
+            this.mainCtrl.updateResultView( SwingFXUtils.toFXImage( lined, null ) );
         }
         catch ( IOException e )
         {

@@ -1,3 +1,20 @@
+/*
+ *  File name:
+ *      Matrix.java
+ *
+ *  ====================
+ *  Description:
+ *
+ *
+ *  ====================
+ *  Sources:
+ *
+ *  ====================
+ *  Author:
+ *      Mehdi Rouijel
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 package imageprocessingops.math;
 
 
@@ -15,6 +32,8 @@ Matrix
     {
         this.rows = rows;
         this.cols = cols;
+
+        this.data = new float[ rows ][ cols ];
     }
 
 

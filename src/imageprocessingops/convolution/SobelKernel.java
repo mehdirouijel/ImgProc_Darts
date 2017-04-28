@@ -1,3 +1,20 @@
+/*
+ *  File name:
+ *      SobelKernel.java
+ *
+ *  ====================
+ *  Description:
+ *
+ *
+ *  ====================
+ *  Sources:
+ *
+ *  ====================
+ *  Author:
+ *      Mehdi Rouijel
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 package imageprocessingops.convolution;
 
 import imageprocessingops.math.Matrix;
@@ -32,20 +49,21 @@ SobelKernel extends ConvoKernel
     convolve( Matrix input )
     {
         float result = 0.0f;
-        this.computedX = 0.0f;
-        this.computedY = 0.0f;
+        float computedX = 0.0f;
+        float computedY = 0.0f;
 
         for ( int row = 0; row < input.rows; ++row )
         {
             for ( int col = 0; col < input.cols; ++col )
             {
-                this.computedX +=
-                    this.kernelX.data[ row ][ col ] * input.data[ ( input.rows-1 )-row ][ ( input.cols-1 )-col ];
-                this.computedY +=
-                    this.kernelY.data[ row ][ col ] * input.data[ ( input.rows-1 )-row ][ ( input.cols-1 )-col ];
+                computedX += this.kernelX.data[ row ][ col ] * input.data[ row ][ col ];
+                computedY += this.kernelY.data[ row ][ col ] * input.data[ row ][ col ];
 
-                result = ( float )Math.sqrt( this.computedX*this.computedX +
-                                             this.computedY*this.computedY );
+                //this.computedX /= this.divisor;
+                //this.computedY /= this.divisor;
+
+                result = ( float )Math.sqrt( computedX*computedX +
+                                             computedY*computedY );
 
                 result /= this.divisor;
             }

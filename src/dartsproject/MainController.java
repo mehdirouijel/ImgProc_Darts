@@ -1,6 +1,6 @@
 /*
  *  File name:
- *      Controller.java
+ *      MainController.java
  *
  *  ====================
  *  Description:
@@ -36,8 +36,10 @@ MainController implements Initializable
 {
 
     @FXML private ImageView imageView;
+    @FXML private ImageView blurView;
     @FXML private ImageView sobelView;
     @FXML private ImageView accumulatorView;
+    @FXML private ImageView resultView;
 
     @FXML private MenuBar menu;
     @FXML private MenuController menuController;
@@ -81,15 +83,27 @@ MainController implements Initializable
         displayedImagePath.setText( Context.getInstance().getCurrentImagePath() );
     }
 
-    public void updateSobelView( Image img )
+    public void
+    updateBlurView( Image img )
     {
-        //this.sobelView.setImage( Context.getInstance().getCurrentPreview() );
+        this.blurView.setImage( img );
+    }
+
+    public void
+    updateSobelView( Image img )
+    {
         this.sobelView.setImage( img );
     }
 
-    public void updateAccumulatorView( Image img )
+    public void
+    updateAccumulatorView( Image img )
     {
         this.accumulatorView.setImage( img );
+    }
+
+    public void updateResultView( Image img )
+    {
+        this.resultView.setImage( img );
     }
 
 }

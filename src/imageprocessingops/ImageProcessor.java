@@ -8,6 +8,8 @@
  *
  *  ====================
  *  Sources:
+ *      https://rosettacode.org/wiki/Image_convolution#Java
+ *      http://vase.essex.ac.uk/software/HoughTransform/HoughTransform.java.html
  *
  *  ====================
  *  Author:
@@ -19,9 +21,14 @@ package imageprocessingops;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.Collections;
 
+import imageprocessingops.convolution.BlurKernel;
 import imageprocessingops.convolution.ConvoKernel;
+import imageprocessingops.convolution.SobelKernel;
 import imageprocessingops.math.Matrix;
+import imageprocessingops.math.HoughPoint;
 
 
 public class
@@ -29,7 +36,9 @@ ImageProcessor
 {
 
     private BufferedImage inputImage = null;
+    private int[] rgbData = null;
     private ConvoKernel kernel = null;
+    private int[][] accumulator = null;
 
     public
     ImageProcessor()
@@ -55,30 +64,171 @@ ImageProcessor
     public void
     setInputImage( BufferedImage theImage )
     {
+        int width = theImage.getWidth();
+        int height = theImage.getHeight();
+
         this.inputImage = theImage;
+        this.rgbData = this.inputImage.getRGB( 0, 0, width, height, null, 0, width );
     }
 
 
-    public BufferedImage
-    runKernel()
+    private BufferedImage
+    rgbDataToImage( int[][] rgbData, int width, int height )
     {
-        int height = this.inputImage.getHeight();
-        int width = this.inputImage.getWidth();
-        BufferedImage result = new BufferedImage( width, height, BufferedImage.TYPE_INT_RGB );
+        BufferedImage result = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
 
-        for ( int row = 1; row < height - 1; ++row )
+        for ( int y = 0; y < height; ++y )
         {
-            for ( int col = 1; col < width - 1; ++col )
+            for ( int x = 0; x < width; ++x )
             {
-                Matrix imageChunk = extractValueImageChunk( 3, row, col );
+                int r = rgbData[ 0 ][ y*width + x ];
+                int g = rgbData[ 1 ][ y*width + x ];
+                int b = rgbData[ 2 ][ y*width + x ];
 
-                float newPixel = kernel.convolve( imageChunk );
-                result.setRGB( col, row, Color.HSBtoRGB( 0.0f, 0.0f, newPixel ) );
+                int rgb = ( ( r << 16 ) | ( g << 8 ) | ( b ) | ( 0xFF000000 ) );
+
+                result.setRGB( x, y, rgb );
             }
         }
 
         return result;
     }
+
+    public BufferedImage
+    runKernel( BufferedImage img )
+    {
+        int height = img.getHeight();
+        int width = img.getWidth();
+        BufferedImage result = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
+
+        if ( this.kernel instanceof SobelKernel )
+        {
+            for ( int row = 1; row < height - 1; ++row )
+            {
+                for ( int col = 1; col < width - 1; ++col )
+                {
+                        Matrix imageChunk = extractValueImageChunk( 3, row, col );
+
+                        float newPixel = kernel.convolve( imageChunk );
+                        result.setRGB( col, row, Color.HSBtoRGB( 0.0f, 0.0f, newPixel ) );
+                }
+            }
+        }
+        else if ( this.kernel instanceof BlurKernel )
+        {
+                    /*
+                    int[][] rgbChannels = extractRGBChannels();
+
+                    for ( int i = 0; i < 3; ++i )
+                    {
+                        rgbChannels[ i ] = kernel.convolve( rgbChannels[ i ], width, height );
+
+                    }
+                    //result.setRGB( col, row, rgb );
+
+                    result = rgbDataToImage( rgbChannels, width, height );
+                    */
+
+            result = ( ( BlurKernel ) this.kernel ).apply( img );
+        }
+
+        return result;
+    }
+    public BufferedImage
+    runKernel()
+    {
+        BufferedImage result = runKernel( this.inputImage );
+
+        return result;
+    }
+
+
+    private int[][]
+    extractRGBChannels()
+    {
+        int width = this.inputImage.getWidth();
+        int height = this.inputImage.getHeight();
+        int[] rChannel = new int[ width*height ];
+        int[] gChannel = new int[ width*height ];
+        int[] bChannel = new int[ width*height ];
+
+        for ( int y = 0; y < height; ++y )
+        {
+            for ( int x = 0; x < width; ++x )
+            {
+                int rgb = this.rgbData[ y*width + x ];
+                rChannel[ y*width + x ] = ( rgb >>> 16 ) & 0xff;
+                gChannel[ y*width + x ] = ( rgb >>>  8 ) & 0xff;
+                bChannel[ y*width + x ] = ( rgb        ) & 0xff;
+            }
+        }
+
+        return ( new int[][] { rChannel, gChannel, bChannel } );
+    }
+    /*
+    private Matrix[]
+    extractRGBImageChunk( int centerRow,
+                          int centerCol )
+    {
+        float red00   = new Color( this.inputImage.getRGB( centerCol-1, centerRow-1 ) ).getRed();
+        float green00 = new Color( this.inputImage.getRGB( centerCol-1, centerRow-1 ) ).getGreen();
+        float blue00  = new Color( this.inputImage.getRGB( centerCol-1, centerRow-1 ) ).getBlue();
+
+        float red01   = new Color( this.inputImage.getRGB( centerCol  , centerRow-1 ) ).getRed();
+        float green01 = new Color( this.inputImage.getRGB( centerCol  , centerRow-1 ) ).getGreen();
+        float blue01  = new Color( this.inputImage.getRGB( centerCol  , centerRow-1 ) ).getBlue();
+
+        float red02   = new Color( this.inputImage.getRGB( centerCol+1, centerRow-1 ) ).getRed();
+        float green02 = new Color( this.inputImage.getRGB( centerCol+1, centerRow-1 ) ).getGreen();
+        float blue02  = new Color( this.inputImage.getRGB( centerCol+1, centerRow-1 ) ).getBlue();
+
+        float red10   = new Color( this.inputImage.getRGB( centerCol-1, centerRow   ) ).getRed();
+        float green10 = new Color( this.inputImage.getRGB( centerCol-1, centerRow   ) ).getGreen();
+        float blue10  = new Color( this.inputImage.getRGB( centerCol-1, centerRow   ) ).getBlue();
+
+        float red11   = new Color( this.inputImage.getRGB( centerCol  , centerRow   ) ).getRed();
+        float green11 = new Color( this.inputImage.getRGB( centerCol  , centerRow   ) ).getGreen();
+        float blue11  = new Color( this.inputImage.getRGB( centerCol  , centerRow   ) ).getBlue();
+
+        float red12   = new Color( this.inputImage.getRGB( centerCol+1, centerRow   ) ).getRed();
+        float green12 = new Color( this.inputImage.getRGB( centerCol+1, centerRow   ) ).getGreen();
+        float blue12  = new Color( this.inputImage.getRGB( centerCol+1, centerRow   ) ).getBlue();
+
+        float red20   = new Color( this.inputImage.getRGB( centerCol-1, centerRow+1 ) ).getRed();
+        float green20 = new Color( this.inputImage.getRGB( centerCol-1, centerRow+1 ) ).getGreen();
+        float blue20  = new Color( this.inputImage.getRGB( centerCol-1, centerRow+1 ) ).getBlue();
+
+        float red21   = new Color( this.inputImage.getRGB( centerCol  , centerRow+1 ) ).getRed();
+        float green21 = new Color( this.inputImage.getRGB( centerCol  , centerRow+1 ) ).getGreen();
+        float blue21  = new Color( this.inputImage.getRGB( centerCol  , centerRow+1 ) ).getBlue();
+
+        float red22   = new Color( this.inputImage.getRGB( centerCol+1, centerRow+1 ) ).getRed();
+        float green22 = new Color( this.inputImage.getRGB( centerCol+1, centerRow+1 ) ).getGreen();
+        float blue22  = new Color( this.inputImage.getRGB( centerCol+1, centerRow+1 ) ).getBlue();
+
+        Matrix[] imageChunk = { new Matrix( 3, 3 ),
+                                new Matrix( 3, 3 ),
+                                new Matrix( 3, 3 ) };
+
+        imageChunk[ 0 ].data = new float[][] {
+                { red00, red01, red02 },
+                { red10, red11, red12 },
+                { red20, red21, red22 }
+        };
+        imageChunk[ 1 ].data = new float[][] {
+                { green00, green01, green02 },
+                { green10, green11, green12 },
+                { green20, green21, green22 }
+        };
+        imageChunk[ 2 ].data = new float[][] {
+                { blue00, blue01, blue02 },
+                { blue10, blue11, blue12 },
+                { blue20, blue21, blue22 }
+        };
+
+        return imageChunk;
+    }
+    */
 
 
     private Matrix
@@ -161,19 +311,20 @@ ImageProcessor
         int height = inputImage.getHeight();
         int maxDistance = ( int )Math.sqrt( width*width + height*height );
 
-        int accumulatorWidth = 180;
-        int accumulatorHeight = maxDistance;
+        int accumulatorWidth = maxDistance;
+        int accumulatorHeight = 180;
         // NOTE: 2D array should have every element initialised to 0.
-        int[][] accumulator = new int[ accumulatorHeight ][ accumulatorWidth ];
+        accumulator = new int[ accumulatorHeight ][ accumulatorWidth ];
         BufferedImage houghSpace = new BufferedImage( accumulatorWidth,
                                                       accumulatorHeight,
-                                                      BufferedImage.TYPE_INT_RGB );
+                                                      BufferedImage.TYPE_INT_ARGB );
         int maxValue = 0;
 
         for ( int y = 0; y < height; ++y )
         {
             for ( int x = 0; x < width; ++x )
             {
+                // NOTE: '-16777216' == '0xFF000000' ( == black in ARGB )
                 if ( inputImage.getRGB( x, y ) != -16777216 )
                 {
                     for ( int theta = 0; theta < 180; ++theta )
@@ -185,11 +336,11 @@ ImageProcessor
 
                         if ( ( rho > 0 ) && ( rho <= maxDistance ) )
                         {
-                            accumulator[ rho ][ theta ] = accumulator[ rho ][ theta ] + 1;
+                            accumulator[ theta ][ rho ] = accumulator[ theta ][ rho ] + 1;
 
-                            if ( accumulator[ rho ][ theta ] > maxValue )
+                            if ( accumulator[ theta ][ rho ] > maxValue )
                             {
-                                maxValue = accumulator[ rho ][ theta ];
+                                maxValue = accumulator[ theta ][ rho ];
                             }
                         }
                     }
@@ -213,5 +364,89 @@ ImageProcessor
         return houghSpace;
     }
 
+
+    private ArrayList< HoughPoint >
+    findMaxima( BufferedImage houghed )
+    {
+        ArrayList< HoughPoint > maxima = new ArrayList<>();
+        maxima.add( new HoughPoint( 0, 0, ( houghed.getRGB( 0, 0 ) & 0x00ffffff ) ) );
+
+        for ( int theta = 0; theta < houghed.getHeight(); ++theta )
+        {
+            for ( int rho = 0; rho < houghed.getWidth(); ++rho )
+            {
+                if ( maxima.size() > 1 )
+                {
+                    //Collections.sort( maxima, ( o1, o2 ) -> ( o1.value - o2.value ) );
+                    Collections.sort( maxima, Collections.reverseOrder() );
+                }
+
+                int value = ( houghed.getRGB( rho, theta ) & 0x00ffffff );
+
+                //if ( maxima.
+                //{
+                //maxima.add( new HoughPoint( rho, theta, value ) );
+                //}
+
+                int i = 0;
+                while ( ( i < maxima.size() ) && ( i < 20 ) )
+                {
+                    if ( value > maxima.get( i ).value )
+                    {
+                        double actualTheta = ( theta * Math.PI ) / 180.0;
+                        maxima.add( i, new HoughPoint( rho, actualTheta, value ) );
+                        break;
+                    }
+
+                    i++;
+                }
+
+                //int value = accumulator[ rho
+            }
+        }
+
+        return maxima;//new ArrayList<>( maxima.subList( 0, 20 ) );
+    }
+
+    public BufferedImage
+    drawHoughLines( BufferedImage houghed, int width, int height )
+    {
+        //BufferedImage lined = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
+        BufferedImage lined = new BufferedImage( houghed.getWidth(),
+                                                 houghed.getHeight(),
+                                                 BufferedImage.TYPE_INT_ARGB );
+
+        ArrayList< HoughPoint > maxima = findMaxima( houghed );
+
+        Graphics2D g2 = lined.createGraphics();
+        //g2.drawImage( this.inputImage, 0, 0, null );
+        g2.drawImage( houghed, 0, 0, null );
+        g2.setColor( Color.red );
+
+        for ( HoughPoint c : maxima )
+        {
+            int rho = c.rho;
+            double theta = c.theta * ( 180 / Math.PI );
+            System.out.println( "rho: "+rho+" ; theta: "+theta+" ; value: "+c.value );
+
+
+            double cosT = Math.cos( theta );
+            double sinT = Math.sin( theta );
+            double x0 = cosT * rho;
+            double y0 = sinT * rho;
+
+            int x1 = ( int ) ( x0 + 500 * ( -sinT ) );
+            int y1 = ( int ) ( y0 + 500 * (  cosT ) );
+            int x2 = ( int ) ( x0 - 500 * ( -sinT ) );
+            int y2 = ( int ) ( y0 - 500 * (  cosT ) );
+
+            //g2.drawLine( x1, y1, x2, y2 );
+            g2.drawLine( ( int )( theta-2 ),   rho, ( int )( theta+2 ),   rho );
+            g2.drawLine( ( int )(   theta ), rho-2, ( int )(   theta ), rho+2 );
+        }
+        g2.dispose();
+
+        return lined;
+    }
 
 }

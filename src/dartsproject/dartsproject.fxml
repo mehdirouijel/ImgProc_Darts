@@ -44,42 +44,47 @@
                     <content>
                         <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0">
                             <center>
-                                <ImageView fx:id="imageView" fitWidth="300.0" preserveRatio="true" BorderPane.alignment="CENTER" />
+                                <ImageView fx:id="imageView" fitWidth="500.0" preserveRatio="true" BorderPane.alignment="CENTER" />
                             </center>
                         </BorderPane>
                     </content>
                 </TitledPane>
                 <TabPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="500.0" tabClosingPolicy="UNAVAILABLE" HBox.hgrow="ALWAYS">
+                    <Tab text="Result">
+                        <content>
+                            <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0">
+                                <center>
+                                    <ImageView fx:id="resultView" fitWidth="500.0" preserveRatio="true" BorderPane.alignment="CENTER" />
+                                </center>
+                            </BorderPane>
+                        </content>
+                    </Tab>
                     <tabs>
+                        <Tab text="Gaussian Blur">
+                            <content>
+                                <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0">
+                                    <center>
+                                        <ImageView fx:id="blurView" fitWidth="500.0" preserveRatio="true" BorderPane.alignment="CENTER" />
+                                    </center>
+                                </BorderPane>
+                            </content>
+                        </Tab>
                         <Tab text="Edge Detection (Sobel)">
                             <content>
-                                <BorderPane prefHeight="200.0" prefWidth="200.0">
+                                <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0">
                                     <center>
-                                        <ImageView fx:id="sobelView" fitWidth="300.0" preserveRatio="true" BorderPane.alignment="CENTER" />
+                                        <ImageView fx:id="sobelView" fitWidth="500.0" preserveRatio="true" BorderPane.alignment="CENTER" />
                                     </center>
                                 </BorderPane>
                             </content>
                         </Tab>
                         <Tab text="Hough Accumulator">
                             <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                    <children>
-                                        <BorderPane prefHeight="200.0" prefWidth="200.0">
-                                            <center>
-                                                <ImageView fx:id="accumulatorView" fitWidth="300.0" preserveRatio="true" BorderPane.alignment="CENTER" />
-                                            </center>
-                                        </BorderPane>
-                                    </children>
-                                </AnchorPane>
-                            </content>
-                        </Tab>
-                        <Tab text="Hough Result">
-                            <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                    <children>
-                                        <BorderPane prefHeight="200.0" prefWidth="200.0" />
-                                    </children>
-                                </AnchorPane>
+                                <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0">
+                                    <center>
+                                        <ImageView fx:id="accumulatorView" fitWidth="500.0" preserveRatio="true" BorderPane.alignment="CENTER" />
+                                    </center>
+                                </BorderPane>
                             </content>
                         </Tab>
                     </tabs>
