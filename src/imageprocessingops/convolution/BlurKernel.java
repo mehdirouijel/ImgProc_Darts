@@ -46,18 +46,28 @@ BlurKernel extends ConvoKernel
             { 0.0f,  0.0f,   0.0f,   5.0f,   0.0f,  0.0f, 0.0f }
         };
         */
+        /*
         this.kernelX.data = new float[][]{
-            { 1.0f,  4.0f,  6.0f,  4.0f, 1.0f },
-            { 4.0f, 16.0f, 24.0f, 16.0f, 4.0f },
-            { 6.0f, 24.0f, 36.0f, 24.0f, 6.0f },
-            { 4.0f, 26.0f, 24.0f, 16.0f, 4.0f },
-            { 1.0f,  4.0f,  6.0f,  4.0f, 1.0f }
+                { 1.0f,  4.0f,  6.0f,  4.0f, 1.0f },
+                { 4.0f, 16.0f, 24.0f, 16.0f, 4.0f },
+                { 6.0f, 24.0f, 36.0f, 12.0f, 6.0f },
+                { 4.0f, 16.0f, 24.0f, 16.0f, 4.0f },
+                { 1.0f,  4.0f,  6.0f,  4.0f, 1.0f }
+        };
+        */
+        this.kernelX.data = new float[][]{
+            { 2.0f,  4.0f,  5.0f,  4.0f, 2.0f },
+            { 4.0f,  9.0f, 12.0f,  9.0f, 4.0f },
+            { 5.0f, 12.0f, 15.0f, 12.0f, 5.0f },
+            { 4.0f,  9.0f, 12.0f,  9.0f, 4.0f },
+            { 2.0f,  4.0f,  5.0f,  4.0f, 2.0f }
         };
 
         this.kernelY = null;
 
         //this.divisor = 1068.0f;
-        this.divisor = 256.0f;
+        //this.divisor = 256.0f;
+        this.divisor = 159.0f;
     }
 
     public BufferedImage

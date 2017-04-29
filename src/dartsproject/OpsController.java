@@ -61,7 +61,7 @@ OpsController implements Initializable
         BufferedImage loaded = null;
         BufferedImage result;
         BufferedImage sobeled;
-        BufferedImage blured;
+        BufferedImage blurred;
 
         try
         {
@@ -72,14 +72,14 @@ OpsController implements Initializable
             sobeled = proc.runKernel();
             this.mainCtrl.updateSobelView( SwingFXUtils.toFXImage( sobeled, null ) );
 
-            proc.setKernel( new BlurKernel() );
-            blured = proc.runKernel();
-            this.mainCtrl.updateBlurView( SwingFXUtils.toFXImage( blured, null ) );
+            //proc.setKernel( new BlurKernel() );
+            //blurred = proc.runKernel();
+            //this.mainCtrl.updateBlurView( SwingFXUtils.toFXImage( blurred, null ) );
 
-            proc.setInputImage( blured );
-            proc.setKernel( new SobelKernel() );
-            result = proc.runKernel();
-            this.mainCtrl.updateResultView( SwingFXUtils.toFXImage( result, null ) );
+            //proc.setInputImage( blurred );
+            //proc.setKernel( new SobelKernel() );
+            //result = proc.runKernel();
+            //this.mainCtrl.updateResultView( SwingFXUtils.toFXImage( result, null ) );
 
             //Context.getInstance().setCurrentPreview( SwingFXUtils.toFXImage( result, null ) );
 
@@ -106,6 +106,7 @@ OpsController implements Initializable
         BufferedImage sobeled;
         BufferedImage houghed;
         BufferedImage lined;
+        BufferedImage blurred;
 
         try
         {
@@ -113,6 +114,12 @@ OpsController implements Initializable
 
             proc.setInputImage( loaded );
             proc.setKernel( new BlurKernel() );
+            blurred = proc.runKernel();
+
+            this.mainCtrl.updateBlurView( SwingFXUtils.toFXImage( blurred, null ) );
+
+            proc.setInputImage( blurred );
+            proc.setKernel( new SobelKernel() );
 
             sobeled = proc.runKernel();
             this.mainCtrl.updateSobelView( SwingFXUtils.toFXImage( sobeled, null ) );

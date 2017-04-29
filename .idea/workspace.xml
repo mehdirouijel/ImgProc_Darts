@@ -1,26 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="Hough accumulator working.&#10;You can see it as an image too! \( °o°)/&#10;Need to find lines from it now.">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/imageprocessingops/convolution/BlurKernel.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/imageprocessingops/math/HoughPoint.java" />
+    <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/ImgProc_Darts/dartsproject/MainController.class" afterPath="$PROJECT_DIR$/out/production/ImgProc_Darts/dartsproject/MainController.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/ImgProc_Darts/dartsproject/OpsController.class" afterPath="$PROJECT_DIR$/out/production/ImgProc_Darts/dartsproject/OpsController.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/ImgProc_Darts/imageprocessingops/ImageProcessor.class" afterPath="$PROJECT_DIR$/out/production/ImgProc_Darts/imageprocessingops/ImageProcessor.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/ImgProc_Darts/imageprocessingops/convolution/ConvoKernel.class" afterPath="$PROJECT_DIR$/out/production/ImgProc_Darts/imageprocessingops/convolution/ConvoKernel.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/ImgProc_Darts/imageprocessingops/convolution/SobelKernel.class" afterPath="$PROJECT_DIR$/out/production/ImgProc_Darts/imageprocessingops/convolution/SobelKernel.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/ImgProc_Darts/imageprocessingops/math/Matrix.class" afterPath="$PROJECT_DIR$/out/production/ImgProc_Darts/imageprocessingops/math/Matrix.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/ImgProc_Darts/dartsproject/dartsproject.fxml" afterPath="$PROJECT_DIR$/out/production/ImgProc_Darts/dartsproject/dartsproject.fxml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/ImgProc_Darts/dartsproject/dartsproject_menu.fxml" afterPath="$PROJECT_DIR$/out/production/ImgProc_Darts/dartsproject/dartsproject_menu.fxml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/dartsproject/MainController.java" afterPath="$PROJECT_DIR$/src/dartsproject/MainController.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/dartsproject/OpsController.java" afterPath="$PROJECT_DIR$/src/dartsproject/OpsController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/dartsproject/dartsproject.fxml" afterPath="$PROJECT_DIR$/src/dartsproject/dartsproject.fxml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/dartsproject/dartsproject_menu.fxml" afterPath="$PROJECT_DIR$/src/dartsproject/dartsproject_menu.fxml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/imageprocessingops/ImageProcessor.java" afterPath="$PROJECT_DIR$/src/imageprocessingops/ImageProcessor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/imageprocessingops/convolution/ConvoKernel.java" afterPath="$PROJECT_DIR$/src/imageprocessingops/convolution/ConvoKernel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/imageprocessingops/convolution/SobelKernel.java" afterPath="$PROJECT_DIR$/src/imageprocessingops/convolution/SobelKernel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/imageprocessingops/math/Matrix.java" afterPath="$PROJECT_DIR$/src/imageprocessingops/math/Matrix.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/imageprocessingops/convolution/BlurKernel.java" afterPath="$PROJECT_DIR$/src/imageprocessingops/convolution/BlurKernel.java" />
     </list>
     <ignored path="JavaFxApplication.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -84,10 +72,12 @@
           <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/dartsproject/Main.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="174">
+                <state relative-caret-position="0">
                   <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
                   <folding>
-                    <element signature="e#0#1434#0" expanded="true" />
+                    <element signature="imports" expanded="false" />
+                    <element signature="e#1402#1403#0" expanded="false" />
+                    <element signature="e#1430#1431#0" expanded="false" />
                   </folding>
                 </state>
               </provider>
@@ -99,6 +89,8 @@
                 <state relative-caret-position="0">
                   <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
                   <folding>
+                    <element signature="e#0#2821#0" expanded="false" />
+                    <element signature="imports" expanded="false" />
                     <element signature="e#2512#2513#0" expanded="false" />
                     <element signature="e#2556#2557#0" expanded="false" />
                     <element signature="e#2599#2600#0" expanded="false" />
@@ -112,10 +104,10 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="MainController.java" pinned="false" current-in-tab="true">
+          <file leaf-file-name="MainController.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/dartsproject/MainController.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="684">
+                <state relative-caret-position="767">
                   <caret line="103" column="31" lean-forward="false" selection-start-line="103" selection-start-column="31" selection-end-line="103" selection-end-column="31" />
                   <folding>
                     <element signature="e#0#2436#0" expanded="true" />
@@ -136,50 +128,28 @@
           <file leaf-file-name="OpsController.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/dartsproject/OpsController.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="255">
-                  <caret line="62" column="29" lean-forward="false" selection-start-line="62" selection-start-column="29" selection-end-line="62" selection-end-column="29" />
+                <state relative-caret-position="1522">
+                  <caret line="121" column="0" lean-forward="false" selection-start-line="121" selection-start-column="0" selection-end-line="121" selection-end-column="0" />
                   <folding>
-                    <element signature="e#0#3401#0" expanded="true" />
+                    <element signature="e#0#3669#0" expanded="true" />
                     <element signature="imports" expanded="true" />
                   </folding>
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="ImageProcessor.java" pinned="false" current-in-tab="false">
+          <file leaf-file-name="ImageProcessor.java" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/imageprocessingops/ImageProcessor.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="759">
-                  <caret line="141" column="22" lean-forward="false" selection-start-line="141" selection-start-column="22" selection-end-line="141" selection-end-column="22" />
+                <state relative-caret-position="763">
+                  <caret line="479" column="52" lean-forward="false" selection-start-line="479" selection-start-column="52" selection-end-line="479" selection-end-column="52" />
                   <folding>
-                    <element signature="e#0#17461#0" expanded="true" />
+                    <element signature="e#0#20443#0" expanded="true" />
                     <element signature="imports" expanded="true" />
+                    <element signature="e#1115#1116#0" expanded="true" />
+                    <element signature="e#1154#1155#0" expanded="true" />
                     <element signature="e#1376#1377#0" expanded="true" />
                     <element signature="e#1415#1416#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="Matrix.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/imageprocessingops/math/Matrix.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="0">
-                  <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-                  <folding>
-                    <element signature="e#0#1269#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="HoughPoint.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/imageprocessingops/math/HoughPoint.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="565">
-                  <caret line="49" column="0" lean-forward="false" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
-                  <folding>
-                    <element signature="e#0#848#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -201,8 +171,8 @@
           <file leaf-file-name="SobelKernel.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/imageprocessingops/convolution/SobelKernel.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="399">
-                  <caret line="43" column="23" lean-forward="false" selection-start-line="43" selection-start-column="23" selection-end-line="43" selection-end-column="23" />
+                <state relative-caret-position="339">
+                  <caret line="54" column="24" lean-forward="true" selection-start-line="54" selection-start-column="24" selection-end-line="54" selection-end-column="24" />
                   <folding>
                     <element signature="e#0#1716#0" expanded="true" />
                   </folding>
@@ -213,10 +183,10 @@
           <file leaf-file-name="BlurKernel.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/imageprocessingops/convolution/BlurKernel.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="510">
-                  <caret line="87" column="76" lean-forward="false" selection-start-line="87" selection-start-column="76" selection-end-line="87" selection-end-column="76" />
+                <state relative-caret-position="240">
+                  <caret line="90" column="25" lean-forward="false" selection-start-line="90" selection-start-column="25" selection-end-line="90" selection-end-column="25" />
                   <folding>
-                    <element signature="e#0#4496#0" expanded="true" />
+                    <element signature="e#0#4869#0" expanded="true" />
                     <element signature="imports" expanded="true" />
                   </folding>
                 </state>
@@ -233,8 +203,8 @@
                 <state />
               </provider>
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="296">
-                  <caret line="62" column="46" lean-forward="true" selection-start-line="62" selection-start-column="46" selection-end-line="62" selection-end-column="46" />
+                <state relative-caret-position="276">
+                  <caret line="62" column="46" lean-forward="false" selection-start-line="62" selection-start-column="46" selection-end-line="62" selection-end-column="46" />
                   <folding />
                 </state>
               </provider>
@@ -315,12 +285,12 @@
         <option value="$PROJECT_DIR$/src/imageprocessingops/convolution/ConvoKernel.java" />
         <option value="$PROJECT_DIR$/src/imageprocessingops/math/PolarCoords.java" />
         <option value="$PROJECT_DIR$/src/imageprocessingops/math/HoughPoint.java" />
-        <option value="$PROJECT_DIR$/src/imageprocessingops/ImageProcessor.java" />
-        <option value="$PROJECT_DIR$/src/dartsproject/OpsController.java" />
-        <option value="$PROJECT_DIR$/src/imageprocessingops/convolution/BlurKernel.java" />
         <option value="$PROJECT_DIR$/src/imageprocessingops/convolution/SobelKernel.java" />
         <option value="$PROJECT_DIR$/src/dartsproject/dartsproject.fxml" />
         <option value="$PROJECT_DIR$/src/dartsproject/MainController.java" />
+        <option value="$PROJECT_DIR$/src/dartsproject/OpsController.java" />
+        <option value="$PROJECT_DIR$/src/imageprocessingops/convolution/BlurKernel.java" />
+        <option value="$PROJECT_DIR$/src/imageprocessingops/ImageProcessor.java" />
       </list>
     </option>
   </component>
@@ -350,7 +320,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="PackagesPane" />
       <pane id="Scope" />
       <pane id="ProjectPane">
@@ -447,6 +416,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -756,7 +726,14 @@
       <option name="project" value="LOCAL" />
       <updated>1493282873420</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Added gaussian blur.&#10;On noisy images, sobel is improved by a blur applied before.&#10;On simpler images though, it messes things up.">
+      <created>1493403772637</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1493403772637</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -775,7 +752,7 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3294979" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12029289" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3420502" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -845,11 +822,12 @@
     <MESSAGE value="Set up multiple controllers.&#10;- Good thing I could find last year's Java project! ( '°.°)&#10;&#10;Also added a menu bar.&#10;- For now I can only load an image file&#10;&#10;Still much to do... ( ;_;)" />
     <MESSAGE value="A bit of work on the UI...&#10;Oh god, so much more to do! Can I finish this in time?&#10;( ;_;)" />
     <MESSAGE value="Hough accumulator working.&#10;You can see it as an image too! \( °o°)/&#10;Need to find lines from it now." />
-    <option name="LAST_COMMIT_MESSAGE" value="Hough accumulator working.&#10;You can see it as an image too! \( °o°)/&#10;Need to find lines from it now." />
+    <MESSAGE value="Added gaussian blur.&#10;On noisy images, sobel is improved by a blur applied before.&#10;On simpler images though, it messes things up." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added gaussian blur.&#10;On noisy images, sobel is improved by a blur applied before.&#10;On simpler images though, it messes things up." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="36" />
+      <option name="time" value="37" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
@@ -868,8 +846,10 @@
         <state relative-caret-position="2250">
           <caret line="178" column="16" lean-forward="false" selection-start-line="178" selection-start-column="16" selection-end-line="178" selection-end-column="16" />
           <folding>
-            <element signature="e#0#17461#0" expanded="true" />
+            <element signature="e#0#20443#0" expanded="true" />
             <element signature="imports" expanded="true" />
+            <element signature="e#1115#1116#0" expanded="true" />
+            <element signature="e#1154#1155#0" expanded="true" />
             <element signature="e#1376#1377#0" expanded="true" />
             <element signature="e#1415#1416#0" expanded="true" />
           </folding>
@@ -925,7 +905,9 @@
         <state relative-caret-position="525">
           <caret line="56" column="31" lean-forward="false" selection-start-line="56" selection-start-column="31" selection-end-line="56" selection-end-column="31" />
           <folding>
-            <element signature="e#0#1434#0" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#1402#1403#0" expanded="false" />
+            <element signature="e#1430#1431#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -935,6 +917,8 @@
         <state relative-caret-position="1545">
           <caret line="124" column="33" lean-forward="false" selection-start-line="124" selection-start-column="33" selection-end-line="124" selection-end-column="33" />
           <folding>
+            <element signature="e#0#2821#0" expanded="false" />
+            <element signature="imports" expanded="false" />
             <element signature="e#2512#2513#0" expanded="false" />
             <element signature="e#2556#2557#0" expanded="false" />
             <element signature="e#2599#2600#0" expanded="false" />
@@ -971,7 +955,7 @@
         <state relative-caret-position="615">
           <caret line="71" column="90" lean-forward="false" selection-start-line="71" selection-start-column="90" selection-end-line="71" selection-end-column="90" />
           <folding>
-            <element signature="e#0#3401#0" expanded="true" />
+            <element signature="e#0#3669#0" expanded="true" />
             <element signature="imports" expanded="true" />
           </folding>
         </state>
@@ -1026,7 +1010,9 @@
         <state relative-caret-position="525">
           <caret line="56" column="31" lean-forward="false" selection-start-line="56" selection-start-column="31" selection-end-line="56" selection-end-column="31" />
           <folding>
-            <element signature="e#0#1434#0" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#1402#1403#0" expanded="false" />
+            <element signature="e#1430#1431#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1036,6 +1022,8 @@
         <state relative-caret-position="30">
           <caret line="2" column="14" lean-forward="false" selection-start-line="2" selection-start-column="14" selection-end-line="2" selection-end-column="14" />
           <folding>
+            <element signature="e#0#2821#0" expanded="false" />
+            <element signature="imports" expanded="false" />
             <element signature="e#2512#2513#0" expanded="false" />
             <element signature="e#2556#2557#0" expanded="false" />
             <element signature="e#2599#2600#0" expanded="false" />
@@ -1072,7 +1060,7 @@
         <state relative-caret-position="285">
           <caret line="38" column="0" lean-forward="false" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
           <folding>
-            <element signature="e#0#3401#0" expanded="true" />
+            <element signature="e#0#3669#0" expanded="true" />
             <element signature="imports" expanded="true" />
           </folding>
         </state>
@@ -1127,7 +1115,9 @@
         <state relative-caret-position="525">
           <caret line="56" column="31" lean-forward="false" selection-start-line="56" selection-start-column="31" selection-end-line="56" selection-end-column="31" />
           <folding>
-            <element signature="e#0#1434#0" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#1402#1403#0" expanded="false" />
+            <element signature="e#1430#1431#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1156,6 +1146,8 @@
         <state relative-caret-position="1095">
           <caret line="77" column="12" lean-forward="false" selection-start-line="77" selection-start-column="12" selection-end-line="77" selection-end-column="12" />
           <folding>
+            <element signature="e#0#2821#0" expanded="false" />
+            <element signature="imports" expanded="false" />
             <element signature="e#2512#2513#0" expanded="false" />
             <element signature="e#2556#2557#0" expanded="false" />
             <element signature="e#2599#2600#0" expanded="false" />
@@ -1206,7 +1198,9 @@
         <state relative-caret-position="180">
           <caret line="12" column="10" lean-forward="false" selection-start-line="12" selection-start-column="10" selection-end-line="12" selection-end-column="10" />
           <folding>
-            <element signature="e#0#1434#0" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#1402#1403#0" expanded="false" />
+            <element signature="e#1430#1431#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1246,7 +1240,9 @@
         <state relative-caret-position="60">
           <caret line="8" column="0" lean-forward="false" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
           <folding>
-            <element signature="e#0#1434#0" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#1402#1403#0" expanded="false" />
+            <element signature="e#1430#1431#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1307,6 +1303,8 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
+            <element signature="e#0#2821#0" expanded="false" />
+            <element signature="imports" expanded="false" />
             <element signature="e#2512#2513#0" expanded="false" />
             <element signature="e#2556#2557#0" expanded="false" />
             <element signature="e#2599#2600#0" expanded="false" />
@@ -1348,12 +1346,85 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/dartsproject/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#1402#1403#0" expanded="false" />
+            <element signature="e#1430#1431#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/imageprocessingops/math/Matrix.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#1269#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/dartsproject/dartsproject.fxml">
+      <provider editor-type-id="JavaFX-Scene-Builder">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="276">
+          <caret line="62" column="46" lean-forward="false" selection-start-line="62" selection-start-column="46" selection-end-line="62" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/imageprocessingops/math/HoughPoint.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="565">
+        <state relative-caret-position="669">
           <caret line="49" column="0" lean-forward="false" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
           <folding>
             <element signature="e#0#848#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/imageprocessingops/convolution/BlurKernel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="90" column="25" lean-forward="false" selection-start-line="90" selection-start-column="25" selection-end-line="90" selection-end-column="25" />
+          <folding>
+            <element signature="e#0#4869#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/imageprocessingops/convolution/SobelKernel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="339">
+          <caret line="54" column="24" lean-forward="true" selection-start-line="54" selection-start-column="24" selection-end-line="54" selection-end-column="24" />
+          <folding>
+            <element signature="e#0#1716#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/dartsproject/MainController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="767">
+          <caret line="103" column="31" lean-forward="false" selection-start-line="103" selection-start-column="31" selection-end-line="103" selection-end-column="31" />
+          <folding>
+            <element signature="e#0#2436#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#2070#2071#0" expanded="true" />
+            <element signature="e#2115#2116#0" expanded="true" />
+            <element signature="e#2171#2172#0" expanded="true" />
+            <element signature="e#2217#2218#0" expanded="true" />
+            <element signature="e#2279#2280#0" expanded="true" />
+            <element signature="e#2331#2332#0" expanded="true" />
+            <element signature="e#2384#2385#0" expanded="true" />
+            <element signature="e#2431#2432#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1369,97 +1440,28 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/dartsproject/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="174">
-          <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#1434#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/dartsproject/OpsController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="62" column="29" lean-forward="false" selection-start-line="62" selection-start-column="29" selection-end-line="62" selection-end-column="29" />
+        <state relative-caret-position="1522">
+          <caret line="121" column="0" lean-forward="false" selection-start-line="121" selection-start-column="0" selection-end-line="121" selection-end-column="0" />
           <folding>
-            <element signature="e#0#3401#0" expanded="true" />
+            <element signature="e#0#3669#0" expanded="true" />
             <element signature="imports" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/imageprocessingops/math/Matrix.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#1269#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/imageprocessingops/convolution/BlurKernel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="87" column="76" lean-forward="false" selection-start-line="87" selection-start-column="76" selection-end-line="87" selection-end-column="76" />
-          <folding>
-            <element signature="e#0#4496#0" expanded="true" />
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/imageprocessingops/convolution/SobelKernel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="399">
-          <caret line="43" column="23" lean-forward="false" selection-start-line="43" selection-start-column="23" selection-end-line="43" selection-end-column="23" />
-          <folding>
-            <element signature="e#0#1716#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/dartsproject/dartsproject.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="296">
-          <caret line="62" column="46" lean-forward="true" selection-start-line="62" selection-start-column="46" selection-end-line="62" selection-end-column="46" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/imageprocessingops/ImageProcessor.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="759">
-          <caret line="141" column="22" lean-forward="false" selection-start-line="141" selection-start-column="22" selection-end-line="141" selection-end-column="22" />
+        <state relative-caret-position="763">
+          <caret line="479" column="52" lean-forward="false" selection-start-line="479" selection-start-column="52" selection-end-line="479" selection-end-column="52" />
           <folding>
-            <element signature="e#0#17461#0" expanded="true" />
+            <element signature="e#0#20443#0" expanded="true" />
             <element signature="imports" expanded="true" />
+            <element signature="e#1115#1116#0" expanded="true" />
+            <element signature="e#1154#1155#0" expanded="true" />
             <element signature="e#1376#1377#0" expanded="true" />
             <element signature="e#1415#1416#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/dartsproject/MainController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="684">
-          <caret line="103" column="31" lean-forward="false" selection-start-line="103" selection-start-column="31" selection-end-line="103" selection-end-column="31" />
-          <folding>
-            <element signature="e#0#2436#0" expanded="true" />
-            <element signature="imports" expanded="true" />
-            <element signature="e#2070#2071#0" expanded="true" />
-            <element signature="e#2115#2116#0" expanded="true" />
-            <element signature="e#2171#2172#0" expanded="true" />
-            <element signature="e#2217#2218#0" expanded="true" />
-            <element signature="e#2279#2280#0" expanded="true" />
-            <element signature="e#2331#2332#0" expanded="true" />
-            <element signature="e#2384#2385#0" expanded="true" />
-            <element signature="e#2431#2432#0" expanded="true" />
           </folding>
         </state>
       </provider>

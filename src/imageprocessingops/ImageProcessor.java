@@ -97,20 +97,91 @@ ImageProcessor
     public BufferedImage
     runKernel( BufferedImage img )
     {
+        final int THRESH_HI = 45;
+        final int THRESH_LO = 35;
+        final int STRG_EDGE =  1;
+        final int WEAK_EDGE = -1;
+        final int NO_EDGE   =  0;
+
         int height = img.getHeight();
         int width = img.getWidth();
         BufferedImage result = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
+        int[][] blobAnalysis = new int[ height ][ width ];
 
         if ( this.kernel instanceof SobelKernel )
         {
-            for ( int row = 1; row < height - 1; ++row )
+            // NOTE: 3 away from the border because the bluring creates an edge by making
+            // the border pixels transparent.
+            // There is probably a better way to deal with this.
+            for ( int row = 3; row < height - 3; ++row )
             {
-                for ( int col = 1; col < width - 1; ++col )
+                for ( int col = 3; col < width - 3; ++col )
                 {
                         Matrix imageChunk = extractValueImageChunk( 3, row, col );
 
                         float newPixel = kernel.convolve( imageChunk );
+
                         result.setRGB( col, row, Color.HSBtoRGB( 0.0f, 0.0f, newPixel ) );
+                }
+            }
+
+            /* THRESHOLDING
+             * Gives a better edge detection.
+             */
+
+            for ( int y = 0; y < result.getHeight(); ++y )
+            {
+                for ( int x = 0; x < result.getWidth(); ++x )
+                {
+                    int r = new Color( result.getRGB( x, y ) ).getRed();
+                    int g = new Color( result.getRGB( x, y ) ).getGreen();
+                    int b = new Color( result.getRGB( x, y ) ).getBlue();
+
+                    int avg = ( r + g + b ) / 3;
+
+                    if ( avg >= THRESH_HI )
+                    {
+                        // NOTE: Strong edge pixel.
+                        result.setRGB( x, y, 0xffffffff );
+                        blobAnalysis[ y ][ x ] = STRG_EDGE;
+                    }
+                    else if ( avg >= THRESH_LO )
+                    {
+                        // NOTE: Weak edge pixel.
+                        result.setRGB( x, y, 0xff000000 );
+                        blobAnalysis[ y ][ x ] = WEAK_EDGE;
+                    }
+                    else
+                    {
+                        // NOTE: Just noise.
+                        result.setRGB( x, y, 0xff000000 );
+                        blobAnalysis[ y ][ x ] = NO_EDGE;
+                    }
+                }
+            }
+
+            /* BLOB ANALYSIS / HYSTERESIS
+             * Keep "weak" points if connected to "strong" ones.
+             */
+            for ( int y = 0; y < result.getHeight(); ++y )
+            {
+                for ( int x = 0; x < result.getWidth(); ++x )
+                {
+                    if ( blobAnalysis[ y ][ x ] == WEAK_EDGE )
+                    {
+                        if ( ( blobAnalysis[ y-1 ][ x-1 ] == STRG_EDGE ) ||
+                             ( blobAnalysis[ y-1 ][ x   ] == STRG_EDGE ) ||
+                             ( blobAnalysis[ y-1 ][ x+1 ] == STRG_EDGE ) ||
+                             ( blobAnalysis[ y   ][ x-1 ] == STRG_EDGE ) ||
+                             ( blobAnalysis[ y   ][ x+1 ] == STRG_EDGE ) ||
+                             ( blobAnalysis[ y+1 ][ x-1 ] == STRG_EDGE ) ||
+                             ( blobAnalysis[ y+1 ][ x   ] == STRG_EDGE ) ||
+                             ( blobAnalysis[ y+1 ][ x+1 ] == STRG_EDGE ) )
+                        {
+                            // NOTE: The weak point is connected to a strong point.
+                            result.setRGB( x, y, 0xffffffff );
+                        }
+                    }
                 }
             }
         }
@@ -405,22 +476,23 @@ ImageProcessor
             }
         }
 
-        return maxima;//new ArrayList<>( maxima.subList( 0, 20 ) );
+        //return maxima;
+        return new ArrayList<>( maxima.subList( 0, 32 ) );
     }
 
     public BufferedImage
     drawHoughLines( BufferedImage houghed, int width, int height )
     {
-        //BufferedImage lined = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
-        BufferedImage lined = new BufferedImage( houghed.getWidth(),
-                                                 houghed.getHeight(),
-                                                 BufferedImage.TYPE_INT_ARGB );
+        BufferedImage lined = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
+        //BufferedImage lined = new BufferedImage( houghed.getWidth(),
+        //                                         houghed.getHeight(),
+        //                                         BufferedImage.TYPE_INT_ARGB );
 
         ArrayList< HoughPoint > maxima = findMaxima( houghed );
 
         Graphics2D g2 = lined.createGraphics();
-        //g2.drawImage( this.inputImage, 0, 0, null );
-        g2.drawImage( houghed, 0, 0, null );
+        g2.drawImage( this.inputImage, 0, 0, null );
+        //g2.drawImage( houghed, 0, 0, null );
         g2.setColor( Color.red );
 
         for ( HoughPoint c : maxima )
@@ -430,8 +502,8 @@ ImageProcessor
             System.out.println( "rho: "+rho+" ; theta: "+theta+" ; value: "+c.value );
 
 
-            double cosT = Math.cos( theta );
-            double sinT = Math.sin( theta );
+            double cosT = Math.cos( c.theta );
+            double sinT = Math.sin( c.theta );
             double x0 = cosT * rho;
             double y0 = sinT * rho;
 
@@ -440,9 +512,9 @@ ImageProcessor
             int x2 = ( int ) ( x0 - 500 * ( -sinT ) );
             int y2 = ( int ) ( y0 - 500 * (  cosT ) );
 
-            //g2.drawLine( x1, y1, x2, y2 );
-            g2.drawLine( ( int )( theta-2 ),   rho, ( int )( theta+2 ),   rho );
-            g2.drawLine( ( int )(   theta ), rho-2, ( int )(   theta ), rho+2 );
+            g2.drawLine( x1, y1, x2, y2 );
+            //g2.drawLine( rho-2,   ( int )( theta ), rho+2,   ( int )( theta ) );
+            //g2.drawLine(   rho, ( int )( theta-2 ),   rho, ( int )( theta+2 ) );
         }
         g2.dispose();
 
