@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
+    <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="Added thresholding and blob analysis to Sobel.&#10;Also re-enabled limit on number of hough lines.&#10;Hough works sort of all right for line detection now, different images need different tweaks though.&#10;Now to work on ellipse detection... ( '-_-)">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/ImgProc_Darts/dartsproject/Context.class" afterPath="$PROJECT_DIR$/out/production/ImgProc_Darts/dartsproject/Context.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/ImgProc_Darts/dartsproject/MainController.class" afterPath="$PROJECT_DIR$/out/production/ImgProc_Darts/dartsproject/MainController.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/ImgProc_Darts/dartsproject/OpsController.class" afterPath="$PROJECT_DIR$/out/production/ImgProc_Darts/dartsproject/OpsController.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/ImgProc_Darts/imageprocessingops/ImageProcessor.class" afterPath="$PROJECT_DIR$/out/production/ImgProc_Darts/imageprocessingops/ImageProcessor.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/ImgProc_Darts/dartsproject/dartsproject.fxml" afterPath="$PROJECT_DIR$/out/production/ImgProc_Darts/dartsproject/dartsproject.fxml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/ImgProc_Darts/dartsproject/dartsproject_ops.fxml" afterPath="$PROJECT_DIR$/out/production/ImgProc_Darts/dartsproject/dartsproject_ops.fxml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/dartsproject/Context.java" afterPath="$PROJECT_DIR$/src/dartsproject/Context.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/dartsproject/MainController.java" afterPath="$PROJECT_DIR$/src/dartsproject/MainController.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/dartsproject/OpsController.java" afterPath="$PROJECT_DIR$/src/dartsproject/OpsController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/dartsproject/dartsproject.fxml" afterPath="$PROJECT_DIR$/src/dartsproject/dartsproject.fxml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/dartsproject/dartsproject_ops.fxml" afterPath="$PROJECT_DIR$/src/dartsproject/dartsproject_ops.fxml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/imageprocessingops/ImageProcessor.java" afterPath="$PROJECT_DIR$/src/imageprocessingops/ImageProcessor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/imageprocessingops/convolution/BlurKernel.java" afterPath="$PROJECT_DIR$/src/imageprocessingops/convolution/BlurKernel.java" />
     </list>
     <ignored path="JavaFxApplication.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -72,13 +78,9 @@
           <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/dartsproject/Main.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="0">
+                <state relative-caret-position="120">
                   <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
-                  <folding>
-                    <element signature="imports" expanded="false" />
-                    <element signature="e#1402#1403#0" expanded="false" />
-                    <element signature="e#1430#1431#0" expanded="false" />
-                  </folding>
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -86,19 +88,21 @@
           <file leaf-file-name="Context.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/dartsproject/Context.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="0">
-                  <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+                <state relative-caret-position="915">
+                  <caret line="144" column="18" lean-forward="false" selection-start-line="144" selection-start-column="18" selection-end-line="144" selection-end-column="18" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="ConvoKernel.java" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/imageprocessingops/convolution/ConvoKernel.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="495">
+                  <caret line="33" column="26" lean-forward="false" selection-start-line="33" selection-start-column="26" selection-end-line="33" selection-end-column="26" />
                   <folding>
-                    <element signature="e#0#2821#0" expanded="false" />
-                    <element signature="imports" expanded="false" />
-                    <element signature="e#2512#2513#0" expanded="false" />
-                    <element signature="e#2556#2557#0" expanded="false" />
-                    <element signature="e#2599#2600#0" expanded="false" />
-                    <element signature="e#2638#2639#0" expanded="false" />
-                    <element signature="e#2685#2686#0" expanded="false" />
-                    <element signature="e#2725#2726#0" expanded="false" />
-                    <element signature="e#2779#2780#0" expanded="false" />
-                    <element signature="e#2816#2817#0" expanded="false" />
+                    <element signature="e#0#665#0" expanded="true" />
+                    <element signature="imports" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -107,19 +111,20 @@
           <file leaf-file-name="MainController.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/dartsproject/MainController.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="767">
-                  <caret line="103" column="31" lean-forward="false" selection-start-line="103" selection-start-column="31" selection-end-line="103" selection-end-column="31" />
+                <state relative-caret-position="-555">
+                  <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="SobelKernel.java" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/imageprocessingops/convolution/SobelKernel.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="225">
+                  <caret line="48" column="23" lean-forward="false" selection-start-line="48" selection-start-column="23" selection-end-line="48" selection-end-column="23" />
                   <folding>
-                    <element signature="e#0#2436#0" expanded="true" />
-                    <element signature="imports" expanded="true" />
-                    <element signature="e#2070#2071#0" expanded="true" />
-                    <element signature="e#2115#2116#0" expanded="true" />
-                    <element signature="e#2171#2172#0" expanded="true" />
-                    <element signature="e#2217#2218#0" expanded="true" />
-                    <element signature="e#2279#2280#0" expanded="true" />
-                    <element signature="e#2331#2332#0" expanded="true" />
-                    <element signature="e#2384#2385#0" expanded="true" />
-                    <element signature="e#2431#2432#0" expanded="true" />
+                    <element signature="e#0#1716#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -128,10 +133,25 @@
           <file leaf-file-name="OpsController.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/dartsproject/OpsController.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1522">
-                  <caret line="121" column="0" lean-forward="false" selection-start-line="121" selection-start-column="0" selection-end-line="121" selection-end-column="0" />
+                <state relative-caret-position="192">
+                  <caret line="96" column="5" lean-forward="false" selection-start-line="96" selection-start-column="5" selection-end-line="96" selection-end-column="5" />
                   <folding>
-                    <element signature="e#0#3669#0" expanded="true" />
+                    <element signature="e#0#4690#0" expanded="true" />
+                    <element signature="imports" expanded="true" />
+                    <element signature="e#1573#1574#0" expanded="true" />
+                    <element signature="e#1619#1620#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="BlurKernel.java" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/imageprocessingops/convolution/BlurKernel.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="165">
+                  <caret line="85" column="36" lean-forward="false" selection-start-line="85" selection-start-column="36" selection-end-line="85" selection-end-column="36" />
+                  <folding>
+                    <element signature="e#0#4869#0" expanded="true" />
                     <element signature="imports" expanded="true" />
                   </folding>
                 </state>
@@ -141,53 +161,15 @@
           <file leaf-file-name="ImageProcessor.java" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/imageprocessingops/ImageProcessor.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="763">
-                  <caret line="479" column="52" lean-forward="false" selection-start-line="479" selection-start-column="52" selection-end-line="479" selection-end-column="52" />
+                <state relative-caret-position="285">
+                  <caret line="216" column="0" lean-forward="false" selection-start-line="216" selection-start-column="0" selection-end-line="216" selection-end-column="0" />
                   <folding>
-                    <element signature="e#0#20443#0" expanded="true" />
+                    <element signature="e#0#22366#0" expanded="true" />
                     <element signature="imports" expanded="true" />
-                    <element signature="e#1115#1116#0" expanded="true" />
-                    <element signature="e#1154#1155#0" expanded="true" />
-                    <element signature="e#1376#1377#0" expanded="true" />
-                    <element signature="e#1415#1416#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="ConvoKernel.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/imageprocessingops/convolution/ConvoKernel.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="495">
-                  <caret line="33" column="4" lean-forward="false" selection-start-line="33" selection-start-column="4" selection-end-line="33" selection-end-column="4" />
-                  <folding>
-                    <element signature="e#0#665#0" expanded="true" />
-                    <element signature="imports" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="SobelKernel.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/imageprocessingops/convolution/SobelKernel.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="339">
-                  <caret line="54" column="24" lean-forward="true" selection-start-line="54" selection-start-column="24" selection-end-line="54" selection-end-column="24" />
-                  <folding>
-                    <element signature="e#0#1716#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="BlurKernel.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/imageprocessingops/convolution/BlurKernel.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="240">
-                  <caret line="90" column="25" lean-forward="false" selection-start-line="90" selection-start-column="25" selection-end-line="90" selection-end-column="25" />
-                  <folding>
-                    <element signature="e#0#4869#0" expanded="true" />
-                    <element signature="imports" expanded="true" />
+                    <element signature="e#1132#1133#0" expanded="true" />
+                    <element signature="e#1167#1168#0" expanded="true" />
+                    <element signature="e#1863#1864#0" expanded="true" />
+                    <element signature="e#1905#1906#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -197,42 +179,42 @@
       </split-first>
       <split-second>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="dartsproject.fxml" pinned="false" current-in-tab="true">
+          <file leaf-file-name="dartsproject.fxml" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/dartsproject/dartsproject.fxml">
-              <provider editor-type-id="JavaFX-Scene-Builder">
-                <state />
-              </provider>
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="276">
-                  <caret line="62" column="46" lean-forward="false" selection-start-line="62" selection-start-column="46" selection-end-line="62" selection-end-column="46" />
+                <state relative-caret-position="374">
+                  <caret line="62" column="42" lean-forward="false" selection-start-line="62" selection-start-column="42" selection-end-line="62" selection-end-column="42" />
                   <folding />
                 </state>
+              </provider>
+              <provider editor-type-id="JavaFX-Scene-Builder">
+                <state />
               </provider>
             </entry>
           </file>
           <file leaf-file-name="dartsproject_menu.fxml" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/dartsproject/dartsproject_menu.fxml">
-              <provider editor-type-id="JavaFX-Scene-Builder">
-                <state />
-              </provider>
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="0">
                   <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
                   <folding />
                 </state>
+              </provider>
+              <provider editor-type-id="JavaFX-Scene-Builder">
+                <state />
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="dartsproject_ops.fxml" pinned="false" current-in-tab="false">
+          <file leaf-file-name="dartsproject_ops.fxml" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/dartsproject/dartsproject_ops.fxml">
-              <provider editor-type-id="JavaFX-Scene-Builder">
-                <state />
-              </provider>
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="0">
-                  <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+                <state relative-caret-position="224">
+                  <caret line="42" column="69" lean-forward="false" selection-start-line="42" selection-start-column="69" selection-end-line="42" selection-end-column="69" />
                   <folding />
                 </state>
+              </provider>
+              <provider editor-type-id="JavaFX-Scene-Builder">
+                <state />
               </provider>
             </entry>
           </file>
@@ -277,19 +259,20 @@
         <option value="$PROJECT_DIR$/src/dartsproject/Singleton.java" />
         <option value="$PROJECT_DIR$/src/dartsproject/Main.java" />
         <option value="$PROJECT_DIR$/src/dartsproject/MenuController.java" />
-        <option value="$PROJECT_DIR$/src/dartsproject/dartsproject_ops.fxml" />
         <option value="$PROJECT_DIR$/src/imageprocessingops/hough/HoughTransform.java" />
-        <option value="$PROJECT_DIR$/src/dartsproject/Context.java" />
         <option value="$PROJECT_DIR$/src/dartsproject/dartsproject_menu.fxml" />
         <option value="$PROJECT_DIR$/src/imageprocessingops/math/Matrix.java" />
         <option value="$PROJECT_DIR$/src/imageprocessingops/convolution/ConvoKernel.java" />
         <option value="$PROJECT_DIR$/src/imageprocessingops/math/PolarCoords.java" />
         <option value="$PROJECT_DIR$/src/imageprocessingops/math/HoughPoint.java" />
-        <option value="$PROJECT_DIR$/src/imageprocessingops/convolution/SobelKernel.java" />
-        <option value="$PROJECT_DIR$/src/dartsproject/dartsproject.fxml" />
-        <option value="$PROJECT_DIR$/src/dartsproject/MainController.java" />
-        <option value="$PROJECT_DIR$/src/dartsproject/OpsController.java" />
         <option value="$PROJECT_DIR$/src/imageprocessingops/convolution/BlurKernel.java" />
+        <option value="$PROJECT_DIR$/src/imageprocessingops/convolution/SobelKernel.java" />
+        <option value="$PROJECT_DIR$/src/dartsproject/Context.java" />
+        <option value="$PROJECT_DIR$/src/dartsproject/MainController.java" />
+        <option value="$PROJECT_DIR$/src/dartsproject/dartsproject_ops.fxml" />
+        <option value="$PROJECT_DIR$/src/dartsproject/dartsproject.fxml" />
+        <option value="$PROJECT_DIR$/src/imageprocessingops/convolution/ThinningKernel.java" />
+        <option value="$PROJECT_DIR$/src/dartsproject/OpsController.java" />
         <option value="$PROJECT_DIR$/src/imageprocessingops/ImageProcessor.java" />
       </list>
     </option>
@@ -322,6 +305,7 @@
     <panes>
       <pane id="PackagesPane" />
       <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -416,7 +400,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -733,7 +716,14 @@
       <option name="project" value="LOCAL" />
       <updated>1493403772637</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Added thresholding and blob analysis to Sobel.&#10;Also re-enabled limit on number of hough lines.&#10;Hough works sort of all right for line detection now, different images need different tweaks though.&#10;Now to work on ellipse detection... ( '-_-)">
+      <created>1493440286598</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1493440286598</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -752,7 +742,7 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3294979" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3420502" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22698745" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -763,7 +753,7 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.43933055" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22071129" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -823,11 +813,12 @@
     <MESSAGE value="A bit of work on the UI...&#10;Oh god, so much more to do! Can I finish this in time?&#10;( ;_;)" />
     <MESSAGE value="Hough accumulator working.&#10;You can see it as an image too! \( °o°)/&#10;Need to find lines from it now." />
     <MESSAGE value="Added gaussian blur.&#10;On noisy images, sobel is improved by a blur applied before.&#10;On simpler images though, it messes things up." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added gaussian blur.&#10;On noisy images, sobel is improved by a blur applied before.&#10;On simpler images though, it messes things up." />
+    <MESSAGE value="Added thresholding and blob analysis to Sobel.&#10;Also re-enabled limit on number of hough lines.&#10;Hough works sort of all right for line detection now, different images need different tweaks though.&#10;Now to work on ellipse detection... ( '-_-)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added thresholding and blob analysis to Sobel.&#10;Also re-enabled limit on number of hough lines.&#10;Hough works sort of all right for line detection now, different images need different tweaks though.&#10;Now to work on ellipse detection... ( '-_-)" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="37" />
+      <option name="time" value="38" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
@@ -841,112 +832,11 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/imageprocessingops/ImageProcessor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2250">
-          <caret line="178" column="16" lean-forward="false" selection-start-line="178" selection-start-column="16" selection-end-line="178" selection-end-column="16" />
-          <folding>
-            <element signature="e#0#20443#0" expanded="true" />
-            <element signature="imports" expanded="true" />
-            <element signature="e#1115#1116#0" expanded="true" />
-            <element signature="e#1154#1155#0" expanded="true" />
-            <element signature="e#1376#1377#0" expanded="true" />
-            <element signature="e#1415#1416#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/dartsproject/MenuController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#1742#0" expanded="false" />
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/dartsproject/dartsproject.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/dartsproject/dartsproject_menu.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="24" column="9" lean-forward="false" selection-start-line="24" selection-start-column="9" selection-end-line="24" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/dartsproject/dartsproject_ops.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="495">
-          <caret line="33" column="71" lean-forward="false" selection-start-line="33" selection-start-column="71" selection-end-line="33" selection-end-column="71" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/dartsproject/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="525">
-          <caret line="56" column="31" lean-forward="false" selection-start-line="56" selection-start-column="31" selection-end-line="56" selection-end-column="31" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#1402#1403#0" expanded="false" />
-            <element signature="e#1430#1431#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/dartsproject/Context.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1545">
-          <caret line="124" column="33" lean-forward="false" selection-start-line="124" selection-start-column="33" selection-end-line="124" selection-end-column="33" />
-          <folding>
-            <element signature="e#0#2821#0" expanded="false" />
-            <element signature="imports" expanded="false" />
-            <element signature="e#2512#2513#0" expanded="false" />
-            <element signature="e#2556#2557#0" expanded="false" />
-            <element signature="e#2599#2600#0" expanded="false" />
-            <element signature="e#2638#2639#0" expanded="false" />
-            <element signature="e#2685#2686#0" expanded="false" />
-            <element signature="e#2725#2726#0" expanded="false" />
-            <element signature="e#2779#2780#0" expanded="false" />
-            <element signature="e#2816#2817#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/dartsproject/MainController.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="855">
           <caret line="85" column="73" lean-forward="false" selection-start-line="85" selection-start-column="73" selection-end-line="85" selection-end-column="73" />
-          <folding>
-            <element signature="e#0#2436#0" expanded="true" />
-            <element signature="imports" expanded="true" />
-            <element signature="e#2070#2071#0" expanded="true" />
-            <element signature="e#2115#2116#0" expanded="true" />
-            <element signature="e#2171#2172#0" expanded="true" />
-            <element signature="e#2217#2218#0" expanded="true" />
-            <element signature="e#2279#2280#0" expanded="true" />
-            <element signature="e#2331#2332#0" expanded="true" />
-            <element signature="e#2384#2385#0" expanded="true" />
-            <element signature="e#2431#2432#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -955,8 +845,10 @@
         <state relative-caret-position="615">
           <caret line="71" column="90" lean-forward="false" selection-start-line="71" selection-start-column="90" selection-end-line="71" selection-end-column="90" />
           <folding>
-            <element signature="e#0#3669#0" expanded="true" />
+            <element signature="e#0#4690#0" expanded="true" />
             <element signature="imports" expanded="true" />
+            <element signature="e#1573#1574#0" expanded="true" />
+            <element signature="e#1619#1620#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -973,36 +865,36 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/dartsproject/dartsproject.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/dartsproject/dartsproject_menu.fxml">
       <provider editor-type-id="JavaFX-Scene-Builder">
         <state />
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/dartsproject/dartsproject_menu.fxml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360">
           <caret line="24" column="9" lean-forward="false" selection-start-line="24" selection-start-column="9" selection-end-line="24" selection-end-column="9" />
           <folding />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/dartsproject/dartsproject_ops.fxml">
-      <provider selected="true" editor-type-id="JavaFX-Scene-Builder">
+      <provider editor-type-id="JavaFX-Scene-Builder">
         <state />
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/dartsproject/dartsproject_ops.fxml">
       <provider editor-type-id="text-editor">
         <state relative-caret-position="375">
           <caret line="25" column="14" lean-forward="false" selection-start-line="25" selection-start-column="14" selection-end-line="25" selection-end-column="14" />
           <folding />
         </state>
+      </provider>
+      <provider selected="true" editor-type-id="JavaFX-Scene-Builder">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/dartsproject/Main.java">
@@ -1010,6 +902,7 @@
         <state relative-caret-position="525">
           <caret line="56" column="31" lean-forward="false" selection-start-line="56" selection-start-column="31" selection-end-line="56" selection-end-column="31" />
           <folding>
+            <element signature="e#0#1434#0" expanded="false" />
             <element signature="imports" expanded="false" />
             <element signature="e#1402#1403#0" expanded="false" />
             <element signature="e#1430#1431#0" expanded="false" />
@@ -1022,16 +915,16 @@
         <state relative-caret-position="30">
           <caret line="2" column="14" lean-forward="false" selection-start-line="2" selection-start-column="14" selection-end-line="2" selection-end-column="14" />
           <folding>
-            <element signature="e#0#2821#0" expanded="false" />
+            <element signature="e#0#3083#0" expanded="false" />
             <element signature="imports" expanded="false" />
-            <element signature="e#2512#2513#0" expanded="false" />
-            <element signature="e#2556#2557#0" expanded="false" />
-            <element signature="e#2599#2600#0" expanded="false" />
-            <element signature="e#2638#2639#0" expanded="false" />
-            <element signature="e#2685#2686#0" expanded="false" />
-            <element signature="e#2725#2726#0" expanded="false" />
-            <element signature="e#2779#2780#0" expanded="false" />
-            <element signature="e#2816#2817#0" expanded="false" />
+            <element signature="e#2593#2594#0" expanded="false" />
+            <element signature="e#2637#2638#0" expanded="false" />
+            <element signature="e#2680#2681#0" expanded="false" />
+            <element signature="e#2719#2720#0" expanded="false" />
+            <element signature="e#2765#2766#0" expanded="false" />
+            <element signature="e#2805#2806#0" expanded="false" />
+            <element signature="e#2858#2859#0" expanded="false" />
+            <element signature="e#2895#2896#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1040,18 +933,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="870">
           <caret line="84" column="4" lean-forward="false" selection-start-line="84" selection-start-column="4" selection-end-line="84" selection-end-column="4" />
-          <folding>
-            <element signature="e#0#2436#0" expanded="true" />
-            <element signature="imports" expanded="true" />
-            <element signature="e#2070#2071#0" expanded="true" />
-            <element signature="e#2115#2116#0" expanded="true" />
-            <element signature="e#2171#2172#0" expanded="true" />
-            <element signature="e#2217#2218#0" expanded="true" />
-            <element signature="e#2279#2280#0" expanded="true" />
-            <element signature="e#2331#2332#0" expanded="true" />
-            <element signature="e#2384#2385#0" expanded="true" />
-            <element signature="e#2431#2432#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1060,8 +942,10 @@
         <state relative-caret-position="285">
           <caret line="38" column="0" lean-forward="false" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
           <folding>
-            <element signature="e#0#3669#0" expanded="true" />
+            <element signature="e#0#4690#0" expanded="true" />
             <element signature="imports" expanded="true" />
+            <element signature="e#1573#1574#0" expanded="true" />
+            <element signature="e#1619#1620#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1078,36 +962,36 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/dartsproject/dartsproject.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/dartsproject/dartsproject_menu.fxml">
       <provider editor-type-id="JavaFX-Scene-Builder">
         <state />
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/dartsproject/dartsproject_menu.fxml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360">
           <caret line="24" column="9" lean-forward="false" selection-start-line="24" selection-start-column="9" selection-end-line="24" selection-end-column="9" />
           <folding />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/dartsproject/dartsproject_ops.fxml">
       <provider editor-type-id="JavaFX-Scene-Builder">
         <state />
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/dartsproject/dartsproject_ops.fxml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
+      </provider>
+      <provider editor-type-id="JavaFX-Scene-Builder">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/dartsproject/Main.java">
@@ -1115,6 +999,7 @@
         <state relative-caret-position="525">
           <caret line="56" column="31" lean-forward="false" selection-start-line="56" selection-start-column="31" selection-end-line="56" selection-end-column="31" />
           <folding>
+            <element signature="e#0#1434#0" expanded="false" />
             <element signature="imports" expanded="false" />
             <element signature="e#1402#1403#0" expanded="false" />
             <element signature="e#1430#1431#0" expanded="false" />
@@ -1126,18 +1011,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="840">
           <caret line="56" column="0" lean-forward="false" selection-start-line="56" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#2436#0" expanded="true" />
-            <element signature="imports" expanded="true" />
-            <element signature="e#2070#2071#0" expanded="true" />
-            <element signature="e#2115#2116#0" expanded="true" />
-            <element signature="e#2171#2172#0" expanded="true" />
-            <element signature="e#2217#2218#0" expanded="true" />
-            <element signature="e#2279#2280#0" expanded="true" />
-            <element signature="e#2331#2332#0" expanded="true" />
-            <element signature="e#2384#2385#0" expanded="true" />
-            <element signature="e#2431#2432#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1146,16 +1020,16 @@
         <state relative-caret-position="1095">
           <caret line="77" column="12" lean-forward="false" selection-start-line="77" selection-start-column="12" selection-end-line="77" selection-end-column="12" />
           <folding>
-            <element signature="e#0#2821#0" expanded="false" />
+            <element signature="e#0#3083#0" expanded="false" />
             <element signature="imports" expanded="false" />
-            <element signature="e#2512#2513#0" expanded="false" />
-            <element signature="e#2556#2557#0" expanded="false" />
-            <element signature="e#2599#2600#0" expanded="false" />
-            <element signature="e#2638#2639#0" expanded="false" />
-            <element signature="e#2685#2686#0" expanded="false" />
-            <element signature="e#2725#2726#0" expanded="false" />
-            <element signature="e#2779#2780#0" expanded="false" />
-            <element signature="e#2816#2817#0" expanded="false" />
+            <element signature="e#2593#2594#0" expanded="false" />
+            <element signature="e#2637#2638#0" expanded="false" />
+            <element signature="e#2680#2681#0" expanded="false" />
+            <element signature="e#2719#2720#0" expanded="false" />
+            <element signature="e#2765#2766#0" expanded="false" />
+            <element signature="e#2805#2806#0" expanded="false" />
+            <element signature="e#2858#2859#0" expanded="false" />
+            <element signature="e#2895#2896#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1172,25 +1046,25 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/dartsproject/dartsproject.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/dartsproject/dartsproject_menu.fxml">
       <provider editor-type-id="JavaFX-Scene-Builder">
         <state />
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/dartsproject/dartsproject_menu.fxml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="450">
           <caret line="30" column="61" lean-forward="false" selection-start-line="30" selection-start-column="61" selection-end-line="30" selection-end-column="61" />
           <folding />
         </state>
+      </provider>
+      <provider editor-type-id="JavaFX-Scene-Builder">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/dartsproject/Main.java">
@@ -1198,6 +1072,7 @@
         <state relative-caret-position="180">
           <caret line="12" column="10" lean-forward="false" selection-start-line="12" selection-start-column="10" selection-end-line="12" selection-end-column="10" />
           <folding>
+            <element signature="e#0#1434#0" expanded="false" />
             <element signature="imports" expanded="false" />
             <element signature="e#1402#1403#0" expanded="false" />
             <element signature="e#1430#1431#0" expanded="false" />
@@ -1209,30 +1084,19 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
           <caret line="10" column="1" lean-forward="false" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
-          <folding>
-            <element signature="e#0#2436#0" expanded="true" />
-            <element signature="imports" expanded="true" />
-            <element signature="e#2070#2071#0" expanded="true" />
-            <element signature="e#2115#2116#0" expanded="true" />
-            <element signature="e#2171#2172#0" expanded="true" />
-            <element signature="e#2217#2218#0" expanded="true" />
-            <element signature="e#2279#2280#0" expanded="true" />
-            <element signature="e#2331#2332#0" expanded="true" />
-            <element signature="e#2384#2385#0" expanded="true" />
-            <element signature="e#2431#2432#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/dartsproject/dartsproject.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
+      </provider>
+      <provider editor-type-id="JavaFX-Scene-Builder">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/dartsproject/Main.java">
@@ -1240,6 +1104,7 @@
         <state relative-caret-position="60">
           <caret line="8" column="0" lean-forward="false" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
           <folding>
+            <element signature="e#0#1434#0" expanded="false" />
             <element signature="imports" expanded="false" />
             <element signature="e#1402#1403#0" expanded="false" />
             <element signature="e#1430#1431#0" expanded="false" />
@@ -1251,30 +1116,19 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
           <caret line="4" column="0" lean-forward="true" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#2436#0" expanded="true" />
-            <element signature="imports" expanded="true" />
-            <element signature="e#2070#2071#0" expanded="true" />
-            <element signature="e#2115#2116#0" expanded="true" />
-            <element signature="e#2171#2172#0" expanded="true" />
-            <element signature="e#2217#2218#0" expanded="true" />
-            <element signature="e#2279#2280#0" expanded="true" />
-            <element signature="e#2331#2332#0" expanded="true" />
-            <element signature="e#2384#2385#0" expanded="true" />
-            <element signature="e#2431#2432#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/dartsproject/dartsproject.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
           <caret line="7" column="11" lean-forward="true" selection-start-line="7" selection-start-column="11" selection-end-line="7" selection-end-column="11" />
           <folding />
         </state>
+      </provider>
+      <provider editor-type-id="JavaFX-Scene-Builder">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/dartsproject/dartsproject_menu.xsl" />
@@ -1298,63 +1152,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/dartsproject/Context.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#2821#0" expanded="false" />
-            <element signature="imports" expanded="false" />
-            <element signature="e#2512#2513#0" expanded="false" />
-            <element signature="e#2556#2557#0" expanded="false" />
-            <element signature="e#2599#2600#0" expanded="false" />
-            <element signature="e#2638#2639#0" expanded="false" />
-            <element signature="e#2685#2686#0" expanded="false" />
-            <element signature="e#2725#2726#0" expanded="false" />
-            <element signature="e#2779#2780#0" expanded="false" />
-            <element signature="e#2816#2817#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/dartsproject/dartsproject_menu.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/dartsproject/dartsproject_ops.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://D:/Java/jdk1.8.0_112/javafx-src.zip!/javafx/fxml/FXMLLoader.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="233">
           <caret line="1772" column="0" lean-forward="false" selection-start-line="1772" selection-start-column="0" selection-end-line="1772" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/dartsproject/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#1402#1403#0" expanded="false" />
-            <element signature="e#1430#1431#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1363,19 +1164,8 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#0#1269#0" expanded="true" />
+            <element signature="e#0#1269#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/dartsproject/dartsproject.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="276">
-          <caret line="62" column="46" lean-forward="false" selection-start-line="62" selection-start-column="46" selection-end-line="62" selection-end-column="46" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1384,55 +1174,110 @@
         <state relative-caret-position="669">
           <caret line="49" column="0" lean-forward="false" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
           <folding>
-            <element signature="e#0#848#0" expanded="true" />
+            <element signature="e#0#848#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/imageprocessingops/convolution/BlurKernel.java">
+    <entry file="jar://D:/Java/jdk1.8.0_112/javafx-src.zip!/javafx/beans/value/WeakChangeListener.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="90" column="25" lean-forward="false" selection-start-line="90" selection-start-column="25" selection-end-line="90" selection-end-column="25" />
+        <state relative-caret-position="373">
+          <caret line="95" column="0" lean-forward="false" selection-start-line="95" selection-start-column="0" selection-end-line="95" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://D:/Java/jdk1.8.0_112/javafx-src.zip!/javafx/scene/Scene.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="161">
+          <caret line="2494" column="0" lean-forward="false" selection-start-line="2494" selection-start-column="0" selection-end-line="2494" selection-end-column="0" />
           <folding>
-            <element signature="e#0#4869#0" expanded="true" />
-            <element signature="imports" expanded="true" />
+            <element signature="e#66617#66618#0" expanded="false" />
+            <element signature="e#66663#66664#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/imageprocessingops/convolution/SobelKernel.java">
+    <entry file="jar://D:/Java/jdk1.8.0_112/javafx-src.zip!/javafx/event/Event.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="339">
-          <caret line="54" column="24" lean-forward="true" selection-start-line="54" selection-start-column="24" selection-end-line="54" selection-end-column="24" />
+        <state relative-caret-position="374">
+          <caret line="198" column="0" lean-forward="false" selection-start-line="198" selection-start-column="0" selection-end-line="198" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://D:/Java/jdk1.8.0_112/javafx-src.zip!/com/sun/javafx/scene/control/MultiplePropertyChangeListenerHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="55" column="0" lean-forward="false" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://D:/Java/jdk1.8.0_112/javafx-src.zip!/javafx/scene/control/Slider.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="169">
+          <caret line="213" column="0" lean-forward="false" selection-start-line="213" selection-start-column="0" selection-end-line="213" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://D:/Java/jdk1.8.0_112/javafx-src.zip!/javafx/beans/property/DoublePropertyBase.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="161">
+          <caret line="148" column="0" lean-forward="false" selection-start-line="148" selection-start-column="0" selection-end-line="148" selection-end-column="0" />
           <folding>
-            <element signature="e#0#1716#0" expanded="true" />
+            <element signature="e#2711#2712#0" expanded="false" />
+            <element signature="e#2773#2774#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/dartsproject/MainController.java">
+    <entry file="file://$PROJECT_DIR$/src/dartsproject/dartsproject_menu.fxml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="767">
-          <caret line="103" column="31" lean-forward="false" selection-start-line="103" selection-start-column="31" selection-end-line="103" selection-end-column="31" />
-          <folding>
-            <element signature="e#0#2436#0" expanded="true" />
-            <element signature="imports" expanded="true" />
-            <element signature="e#2070#2071#0" expanded="true" />
-            <element signature="e#2115#2116#0" expanded="true" />
-            <element signature="e#2171#2172#0" expanded="true" />
-            <element signature="e#2217#2218#0" expanded="true" />
-            <element signature="e#2279#2280#0" expanded="true" />
-            <element signature="e#2331#2332#0" expanded="true" />
-            <element signature="e#2384#2385#0" expanded="true" />
-            <element signature="e#2431#2432#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="JavaFX-Scene-Builder">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/dartsproject/dartsproject.fxml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="62" column="42" lean-forward="false" selection-start-line="62" selection-start-column="42" selection-end-line="62" selection-end-column="42" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="JavaFX-Scene-Builder">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/dartsproject/dartsproject_ops.fxml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="224">
+          <caret line="42" column="69" lean-forward="false" selection-start-line="42" selection-start-column="69" selection-end-line="42" selection-end-column="69" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="JavaFX-Scene-Builder">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/imageprocessingops/convolution/ThinningKernel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="13" column="0" lean-forward="false" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/imageprocessingops/convolution/ConvoKernel.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="495">
-          <caret line="33" column="4" lean-forward="false" selection-start-line="33" selection-start-column="4" selection-end-line="33" selection-end-column="4" />
+          <caret line="33" column="26" lean-forward="false" selection-start-line="33" selection-start-column="26" selection-end-line="33" selection-end-column="26" />
           <folding>
             <element signature="e#0#665#0" expanded="true" />
             <element signature="imports" expanded="true" />
@@ -1440,28 +1285,75 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/dartsproject/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/dartsproject/Context.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="915">
+          <caret line="144" column="18" lean-forward="false" selection-start-line="144" selection-start-column="18" selection-end-line="144" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/dartsproject/MainController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-555">
+          <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/imageprocessingops/convolution/SobelKernel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="48" column="23" lean-forward="false" selection-start-line="48" selection-start-column="23" selection-end-line="48" selection-end-column="23" />
+          <folding>
+            <element signature="e#0#1716#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/imageprocessingops/convolution/BlurKernel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="85" column="36" lean-forward="false" selection-start-line="85" selection-start-column="36" selection-end-line="85" selection-end-column="36" />
+          <folding>
+            <element signature="e#0#4869#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/dartsproject/OpsController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1522">
-          <caret line="121" column="0" lean-forward="false" selection-start-line="121" selection-start-column="0" selection-end-line="121" selection-end-column="0" />
+        <state relative-caret-position="192">
+          <caret line="96" column="5" lean-forward="false" selection-start-line="96" selection-start-column="5" selection-end-line="96" selection-end-column="5" />
           <folding>
-            <element signature="e#0#3669#0" expanded="true" />
+            <element signature="e#0#4690#0" expanded="true" />
             <element signature="imports" expanded="true" />
+            <element signature="e#1573#1574#0" expanded="true" />
+            <element signature="e#1619#1620#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/imageprocessingops/ImageProcessor.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="763">
-          <caret line="479" column="52" lean-forward="false" selection-start-line="479" selection-start-column="52" selection-end-line="479" selection-end-column="52" />
+        <state relative-caret-position="285">
+          <caret line="216" column="0" lean-forward="false" selection-start-line="216" selection-start-column="0" selection-end-line="216" selection-end-column="0" />
           <folding>
-            <element signature="e#0#20443#0" expanded="true" />
+            <element signature="e#0#22366#0" expanded="true" />
             <element signature="imports" expanded="true" />
-            <element signature="e#1115#1116#0" expanded="true" />
-            <element signature="e#1154#1155#0" expanded="true" />
-            <element signature="e#1376#1377#0" expanded="true" />
-            <element signature="e#1415#1416#0" expanded="true" />
+            <element signature="e#1132#1133#0" expanded="true" />
+            <element signature="e#1167#1168#0" expanded="true" />
+            <element signature="e#1863#1864#0" expanded="true" />
+            <element signature="e#1905#1906#0" expanded="true" />
           </folding>
         </state>
       </provider>

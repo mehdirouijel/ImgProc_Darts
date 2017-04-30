@@ -21,6 +21,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -43,6 +45,12 @@ MainController implements Initializable
 
     @FXML private MenuBar menu;
     @FXML private MenuController menuController;
+
+    @FXML private TabPane resultTabs;
+    @FXML private Tab houghResultTab;
+    @FXML private Tab blurTab;
+    @FXML private Tab accuTab;
+    @FXML private Tab sobelTab;
 
     @FXML private VBox ops;
     @FXML private OpsController opsController;
@@ -87,23 +95,31 @@ MainController implements Initializable
     updateBlurView( Image img )
     {
         this.blurView.setImage( img );
+
+        resultTabs.getSelectionModel().select( blurTab );
     }
 
     public void
     updateSobelView( Image img )
     {
         this.sobelView.setImage( img );
+
+        resultTabs.getSelectionModel().select( sobelTab );
     }
 
     public void
     updateAccumulatorView( Image img )
     {
         this.accumulatorView.setImage( img );
+
+        resultTabs.getSelectionModel().select( accuTab );
     }
 
     public void updateResultView( Image img )
     {
         this.resultView.setImage( img );
+
+        resultTabs.getSelectionModel().select( houghResultTab );
     }
 
 }

@@ -18,12 +18,12 @@
 
 -->
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
@@ -49,8 +49,8 @@
                         </BorderPane>
                     </content>
                 </TitledPane>
-                <TabPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="500.0" tabClosingPolicy="UNAVAILABLE" HBox.hgrow="ALWAYS">
-                    <Tab text="Result">
+                <TabPane fx:id="resultTabs" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="500.0" tabClosingPolicy="UNAVAILABLE" HBox.hgrow="ALWAYS">
+                    <Tab fx:id="houghResultTab" text="Hough Result">
                         <content>
                             <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0">
                                 <center>
@@ -60,7 +60,7 @@
                         </content>
                     </Tab>
                     <tabs>
-                        <Tab text="Gaussian Blur">
+                        <Tab fx:id="blurTab" text="Gaussian Blur">
                             <content>
                                 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0">
                                     <center>
@@ -69,7 +69,7 @@
                                 </BorderPane>
                             </content>
                         </Tab>
-                        <Tab text="Edge Detection (Sobel)">
+                        <Tab fx:id="sobelTab" text="Edge Detection (Sobel)">
                             <content>
                                 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0">
                                     <center>
@@ -78,7 +78,7 @@
                                 </BorderPane>
                             </content>
                         </Tab>
-                        <Tab text="Hough Accumulator">
+                        <Tab fx:id="accuTab" text="Hough Accumulator">
                             <content>
                                 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0">
                                     <center>
@@ -88,6 +88,9 @@
                             </content>
                         </Tab>
                     </tabs>
+               <padding>
+                  <Insets top="-5.0" />
+               </padding>
                 </TabPane>
             </children>
         </HBox>

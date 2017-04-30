@@ -21,6 +21,7 @@ package dartsproject;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.MalformedURLException;
 
@@ -62,6 +63,7 @@ Context
     private Image currentImage = null;
     private String currentImagePath = null;
     private File currentFile = null;
+    private BufferedImage houghAccu = null;
 
 
     public Image
@@ -129,17 +131,25 @@ Context
         return this.currentFile;
     }
 
-
     public Stage
     getPrimaryStage()
     {
         return this.primaryStage;
     }
-
     public void
     setPrimaryStage( Stage s )
     {
         this.primaryStage = s;
     }
 
+    public BufferedImage
+    getHoughAccu()
+    {
+        return this.houghAccu;
+    }
+    public void
+    setHoughAccu( BufferedImage img )
+    {
+        this.houghAccu = img;
+    }
 }

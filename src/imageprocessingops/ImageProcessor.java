@@ -10,6 +10,7 @@
  *  Sources:
  *      https://rosettacode.org/wiki/Image_convolution#Java
  *      http://vase.essex.ac.uk/software/HoughTransform/HoughTransform.java.html
+ *      http://homepages.inf.ed.ac.uk/rbf/HIPR2/thin.htm
  *
  *  ====================
  *  Author:
@@ -39,10 +40,12 @@ ImageProcessor
     private int[] rgbData = null;
     private ConvoKernel kernel = null;
     private int[][] accumulator = null;
+    private int nbOfLines;
 
     public
     ImageProcessor()
     {
+        this.nbOfLines = 32;
     }
     public
     ImageProcessor( ConvoKernel theKernel )
@@ -69,6 +72,11 @@ ImageProcessor
 
         this.inputImage = theImage;
         this.rgbData = this.inputImage.getRGB( 0, 0, width, height, null, 0, width );
+    }
+    public void
+    setNbOfLines( int nbOfLines )
+    {
+        this.nbOfLines = nbOfLines;
     }
 
 
@@ -160,7 +168,7 @@ ImageProcessor
                 }
             }
 
-            /* BLOB ANALYSIS / HYSTERESIS
+            /* BLOB ANALYSIS
              * Keep "weak" points if connected to "strong" ones.
              */
             for ( int y = 0; y < result.getHeight(); ++y )
@@ -184,6 +192,117 @@ ImageProcessor
                     }
                 }
             }
+
+            /* THINNING
+             * kernel format : 1 = foreground colour
+             *                 0 = background colour
+             *                -1 = don't care
+             */
+            boolean somethingChanged = true;
+            BufferedImage tmpImg = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
+            int[][] a = {
+                { 0, 0, 0,
+                  -1, 1, -1,
+                  1, 1, 1},
+                { 1, -1, 0,
+                  1, 1, 0,
+                  1, -1, 0 },
+                { 1, 1, 1,
+                  -1, 1, -1,
+                  0, 0, 0 },
+                { 0, -1, 1,
+                  0, 1, 1,
+                  0, -1, 1 }
+            };
+
+            int[][] b = {
+                { -1, 0, 0,
+                  1, 1, 0,
+                  -1, 1, -1 },
+                { -1, 1, -1,
+                  1, 1, 0,
+                  -1, 0, 0 },
+                { -1, 1, -1,
+                  0, 1, 1,
+                  0, 0, -1 },
+                { 0, 0, -1,
+                  0, 1, 1,
+                  -1, 1, -1 }
+            };
+
+            //while ( somethingChanged )
+            //{
+                somethingChanged = false;
+
+                for ( int i = 0; i < 4; ++i )
+                {
+                    for ( int y = 1; y < height-1; ++y )
+                    {
+                        for ( int x = 1; x < width-1; ++x )
+                        {
+                            int nw = ( new Color( result.getRGB( x-1, y-1 ) ).getRed() % 254 > 0) ? 1 : 0;
+                            int n  = ( new Color( result.getRGB(   x, y-1 ) ).getRed() % 254 > 0) ? 1 : 0;
+                            int ne = ( new Color( result.getRGB( x+1, y-1 ) ).getRed() % 254 > 0) ? 1 : 0;
+                            int w  = ( new Color( result.getRGB( x-1,   y ) ).getRed() % 254 > 0) ? 1 : 0;
+                            int c  = ( new Color( result.getRGB(   x,   y ) ).getRed() % 254 > 0) ? 1 : 0;
+                            int e  = ( new Color( result.getRGB( x+1,   y ) ).getRed() % 254 > 0) ? 1 : 0;
+                            int sw = ( new Color( result.getRGB( x-1, y+1 ) ).getRed() % 254 > 0) ? 1 : 0;
+                            int s  = ( new Color( result.getRGB(   x, y+1 ) ).getRed() % 254 > 0) ? 1 : 0;
+                            int se = ( new Color( result.getRGB( x+1, y+1 ) ).getRed() % 254 > 0) ? 1 : 0;
+                            if ( ( nw > 0 ) &&
+                                 (  n > 0 ) &&
+                                 ( ne > 0 ) &&
+                                 (  w > 0 ) &&
+                                 (  c > 0 ) &&
+                                 (  e > 0 ) &&
+                                 ( sw > 0 ) &&
+                                 (  s > 0 ) &&
+                                 ( se > 0 ) )
+                            {
+                                if ( ( nw == a[ i ][ 0 ] ) &&
+                                     (  n == a[ i ][ 1 ] ) &&
+                                     ( ne == a[ i ][ 2 ] ) &&
+                                     (  w == a[ i ][ 3 ] ) &&
+                                     (  c == a[ i ][ 4 ] ) &&
+                                     (  e == a[ i ][ 5 ] ) &&
+                                     ( sw == a[ i ][ 6 ] ) &&
+                                     (  s == a[ i ][ 7 ] ) &&
+                                     ( se == a[ i ][ 8 ] ) )
+                                {
+                                    tmpImg.setRGB( x, y, 0xffffffff );
+                                    somethingChanged = true;
+                                }
+                            }
+                            else
+                            {
+                                tmpImg.setRGB( x, y, 0xff000000 );
+                            }
+
+                            /*
+                            if ( ( new Color( result.getRGB( x-1, y-1 ) ).getRed() % 254 == b[ i ][ 0 ] ) &&
+                                 ( new Color( result.getRGB(   x, y-1 ) ).getRed() % 254 == b[ i ][ 1 ] ) &&
+                                 ( new Color( result.getRGB( x+1, y-1 ) ).getRed() % 254 == b[ i ][ 2 ] ) &&
+                                 ( new Color( result.getRGB( x-1,   y ) ).getRed() % 254 == b[ i ][ 3 ] ) &&
+                                 ( new Color( result.getRGB(   x,   y ) ).getRed() % 254 == b[ i ][ 4 ] ) &&
+                                 ( new Color( result.getRGB( x+1,   y ) ).getRed() % 254 == b[ i ][ 5 ] ) &&
+                                 ( new Color( result.getRGB( x-1, y+1 ) ).getRed() % 254 == b[ i ][ 6 ] ) &&
+                                 ( new Color( result.getRGB(   x, y+1 ) ).getRed() % 254 == b[ i ][ 7 ] ) &&
+                                 ( new Color( result.getRGB( x+1, y+1 ) ).getRed() % 254 == b[ i ][ 8 ] ) )
+                            {
+                                result.setRGB( x, y, 0xffffffff );
+                                somethingChanged = true;
+                            }
+                            else
+                            {
+                                result.setRGB( x, y, 0xff000000 );
+                            }
+                            */
+                        }
+                    }
+                }
+            //}
+
+            result = tmpImg;
         }
         else if ( this.kernel instanceof BlurKernel )
         {
@@ -214,6 +333,7 @@ ImageProcessor
     }
 
 
+    /*
     private int[][]
     extractRGBChannels()
     {
@@ -235,69 +355,6 @@ ImageProcessor
         }
 
         return ( new int[][] { rChannel, gChannel, bChannel } );
-    }
-    /*
-    private Matrix[]
-    extractRGBImageChunk( int centerRow,
-                          int centerCol )
-    {
-        float red00   = new Color( this.inputImage.getRGB( centerCol-1, centerRow-1 ) ).getRed();
-        float green00 = new Color( this.inputImage.getRGB( centerCol-1, centerRow-1 ) ).getGreen();
-        float blue00  = new Color( this.inputImage.getRGB( centerCol-1, centerRow-1 ) ).getBlue();
-
-        float red01   = new Color( this.inputImage.getRGB( centerCol  , centerRow-1 ) ).getRed();
-        float green01 = new Color( this.inputImage.getRGB( centerCol  , centerRow-1 ) ).getGreen();
-        float blue01  = new Color( this.inputImage.getRGB( centerCol  , centerRow-1 ) ).getBlue();
-
-        float red02   = new Color( this.inputImage.getRGB( centerCol+1, centerRow-1 ) ).getRed();
-        float green02 = new Color( this.inputImage.getRGB( centerCol+1, centerRow-1 ) ).getGreen();
-        float blue02  = new Color( this.inputImage.getRGB( centerCol+1, centerRow-1 ) ).getBlue();
-
-        float red10   = new Color( this.inputImage.getRGB( centerCol-1, centerRow   ) ).getRed();
-        float green10 = new Color( this.inputImage.getRGB( centerCol-1, centerRow   ) ).getGreen();
-        float blue10  = new Color( this.inputImage.getRGB( centerCol-1, centerRow   ) ).getBlue();
-
-        float red11   = new Color( this.inputImage.getRGB( centerCol  , centerRow   ) ).getRed();
-        float green11 = new Color( this.inputImage.getRGB( centerCol  , centerRow   ) ).getGreen();
-        float blue11  = new Color( this.inputImage.getRGB( centerCol  , centerRow   ) ).getBlue();
-
-        float red12   = new Color( this.inputImage.getRGB( centerCol+1, centerRow   ) ).getRed();
-        float green12 = new Color( this.inputImage.getRGB( centerCol+1, centerRow   ) ).getGreen();
-        float blue12  = new Color( this.inputImage.getRGB( centerCol+1, centerRow   ) ).getBlue();
-
-        float red20   = new Color( this.inputImage.getRGB( centerCol-1, centerRow+1 ) ).getRed();
-        float green20 = new Color( this.inputImage.getRGB( centerCol-1, centerRow+1 ) ).getGreen();
-        float blue20  = new Color( this.inputImage.getRGB( centerCol-1, centerRow+1 ) ).getBlue();
-
-        float red21   = new Color( this.inputImage.getRGB( centerCol  , centerRow+1 ) ).getRed();
-        float green21 = new Color( this.inputImage.getRGB( centerCol  , centerRow+1 ) ).getGreen();
-        float blue21  = new Color( this.inputImage.getRGB( centerCol  , centerRow+1 ) ).getBlue();
-
-        float red22   = new Color( this.inputImage.getRGB( centerCol+1, centerRow+1 ) ).getRed();
-        float green22 = new Color( this.inputImage.getRGB( centerCol+1, centerRow+1 ) ).getGreen();
-        float blue22  = new Color( this.inputImage.getRGB( centerCol+1, centerRow+1 ) ).getBlue();
-
-        Matrix[] imageChunk = { new Matrix( 3, 3 ),
-                                new Matrix( 3, 3 ),
-                                new Matrix( 3, 3 ) };
-
-        imageChunk[ 0 ].data = new float[][] {
-                { red00, red01, red02 },
-                { red10, red11, red12 },
-                { red20, red21, red22 }
-        };
-        imageChunk[ 1 ].data = new float[][] {
-                { green00, green01, green02 },
-                { green10, green11, green12 },
-                { green20, green21, green22 }
-        };
-        imageChunk[ 2 ].data = new float[][] {
-                { blue00, blue01, blue02 },
-                { blue10, blue11, blue12 },
-                { blue20, blue21, blue22 }
-        };
-
-        return imageChunk;
     }
     */
 
@@ -448,16 +505,10 @@ ImageProcessor
             {
                 if ( maxima.size() > 1 )
                 {
-                    //Collections.sort( maxima, ( o1, o2 ) -> ( o1.value - o2.value ) );
                     Collections.sort( maxima, Collections.reverseOrder() );
                 }
 
                 int value = ( houghed.getRGB( rho, theta ) & 0x00ffffff );
-
-                //if ( maxima.
-                //{
-                //maxima.add( new HoughPoint( rho, theta, value ) );
-                //}
 
                 int i = 0;
                 while ( ( i < maxima.size() ) && ( i < 20 ) )
@@ -471,35 +522,35 @@ ImageProcessor
 
                     i++;
                 }
-
-                //int value = accumulator[ rho
             }
         }
 
         //return maxima;
-        return new ArrayList<>( maxima.subList( 0, 32 ) );
+        return new ArrayList<>( maxima.subList( 0, this.nbOfLines ) );
     }
 
-    public BufferedImage
+    public BufferedImage[]
     drawHoughLines( BufferedImage houghed, int width, int height )
     {
         BufferedImage lined = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
-        //BufferedImage lined = new BufferedImage( houghed.getWidth(),
-        //                                         houghed.getHeight(),
-        //                                         BufferedImage.TYPE_INT_ARGB );
+        BufferedImage houghImage = new BufferedImage( houghed.getWidth(),
+                                                      houghed.getHeight(),
+                                                      BufferedImage.TYPE_INT_ARGB );
 
         ArrayList< HoughPoint > maxima = findMaxima( houghed );
 
-        Graphics2D g2 = lined.createGraphics();
-        g2.drawImage( this.inputImage, 0, 0, null );
-        //g2.drawImage( houghed, 0, 0, null );
-        g2.setColor( Color.red );
+        Graphics2D houghLines = lined.createGraphics();
+        Graphics2D houghPoints = houghImage.createGraphics();
+        houghLines.drawImage( this.inputImage, 0, 0, null );
+        houghPoints.drawImage( houghed, 0, 0, null );
+        houghLines.setColor( Color.red );
+        houghPoints.setColor( Color.red );
 
         for ( HoughPoint c : maxima )
         {
             int rho = c.rho;
             double theta = c.theta * ( 180 / Math.PI );
-            System.out.println( "rho: "+rho+" ; theta: "+theta+" ; value: "+c.value );
+            //System.out.println( "rho: "+rho+" ; theta: "+theta+" ; value: "+c.value );
 
 
             double cosT = Math.cos( c.theta );
@@ -507,18 +558,19 @@ ImageProcessor
             double x0 = cosT * rho;
             double y0 = sinT * rho;
 
-            int x1 = ( int ) ( x0 + 500 * ( -sinT ) );
-            int y1 = ( int ) ( y0 + 500 * (  cosT ) );
-            int x2 = ( int ) ( x0 - 500 * ( -sinT ) );
-            int y2 = ( int ) ( y0 - 500 * (  cosT ) );
+            int x1 = ( int ) ( x0 + 1000 * ( -sinT ) );
+            int y1 = ( int ) ( y0 + 1000 * (  cosT ) );
+            int x2 = ( int ) ( x0 - 1000 * ( -sinT ) );
+            int y2 = ( int ) ( y0 - 1000 * (  cosT ) );
 
-            g2.drawLine( x1, y1, x2, y2 );
-            //g2.drawLine( rho-2,   ( int )( theta ), rho+2,   ( int )( theta ) );
-            //g2.drawLine(   rho, ( int )( theta-2 ),   rho, ( int )( theta+2 ) );
+            houghLines.drawLine( x1, y1, x2, y2 );
+            houghPoints.drawLine( rho-5,   ( int )( theta ), rho+5,   ( int )( theta ) );
+            houghPoints.drawLine(   rho, ( int )( theta )-5,   rho, ( int )( theta )+5 );
         }
-        g2.dispose();
+        houghLines.dispose();
+        houghPoints.dispose();
 
-        return lined;
+        return new BufferedImage[] { lined, houghImage };
     }
 
 }
