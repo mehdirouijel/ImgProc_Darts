@@ -131,6 +131,8 @@ OpsController implements Initializable
         this.proc.setBlobAnalysis( true );
         this.proc.setThinning( true );
         this.proc.setEllipsesCount( ( int )nbOfEllipses.getValue() );
+        this.proc.setShowEllipseCenter( true );
+        this.proc.setShowEllipsesFound( true );
     }
 
 

@@ -54,15 +54,15 @@
                                     <VBox prefHeight="200.0" prefWidth="150.0" spacing="1.0">
                                         <children>
                                             <Label text="Line Detection Options" alignment="TOP_LEFT" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0" style="-fx-font-weight:bold;" />
-                                            <Label fx:id="houghLinesLabel" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0" text="Hough lines: 20" />
-                                            <Slider fx:id="houghLinesNb" blockIncrement="1" max="100" maxWidth="1.7976931348623157E308" min="1" minWidth="-Infinity" prefWidth="150.0" value="20" />
+                                            <Label fx:id="houghLinesLabel" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0" text="Hough lines: 10" />
+                                            <Slider fx:id="houghLinesNb" blockIncrement="1" max="100" maxWidth="1.7976931348623157E308" min="1" minWidth="-Infinity" prefWidth="150.0" value="10" />
                                         </children>
                                     </VBox>
                                     <VBox prefHeight="200.0" prefWidth="150.0" spacing="1.0">
                                         <children>
                                             <Label text="Ellipse Detection Options" alignment="TOP_LEFT" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0" style="-fx-font-weight:bold;" />
-                                            <Label fx:id="nbOfEllipsesLabel" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0" text="Ellipses Count: 1" />
-                                            <Slider fx:id="nbOfEllipses" blockIncrement="1" max="30" maxWidth="1.7976931348623157E308" min="1" minWidth="-Infinity" prefWidth="150.0" value="1" />
+                                            <Label fx:id="nbOfEllipsesLabel" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0" text="Ellipses Count: 3" />
+                                            <Slider fx:id="nbOfEllipses" blockIncrement="1" max="30" maxWidth="1.7976931348623157E308" min="1" minWidth="-Infinity" prefWidth="150.0" value="3" />
                                             <CheckBox fx:id="showCenterOfEllipse" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" text="Show Ellipse Center" textAlignment="CENTER" />
                                             <CheckBox fx:id="showFoundEllipses" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" text="Show Found Ellipses" textAlignment="CENTER" />
                                         </children>

@@ -56,7 +56,7 @@ ImageProcessor
     public
     ImageProcessor()
     {
-        this.nbOfLines = 32;
+        this.nbOfLines = 10;
     }
 
     public void
@@ -356,7 +356,7 @@ ImageProcessor
                             y*Math.sin( ( theta * Math.PI ) / 180.0 )
                         );
 
-                        if ( ( rho > 0 ) && ( rho <= maxDistance ) )
+                        if ( ( rho > 0 ) && ( rho < maxDistance ) )
                         {
                             accumulator[ theta ][ rho ] = accumulator[ theta ][ rho ] + 1;
 
@@ -486,7 +486,7 @@ ImageProcessor
                     double cosA = Math.cos( alpha );
                     double sinA = Math.sin( alpha );
 
-                    for ( double t = 0.0; t < 2*Math.PI; t+=0.2 )
+                    for ( double t = 0.0; t < 2*Math.PI; t+=0.02 )
                     {
                         double cosT = Math.cos( t );
                         double sinT = Math.sin( t );
@@ -503,9 +503,9 @@ ImageProcessor
                              ( ( x != previousX ) || ( y != previousY ) ) )
                         {
                             coverage++;
+                            previousX = x;
+                            previousY = y;
                         }
-                        previousX = x;
-                        previousY = y;
                     }
 
                     if ( coverage > bestCoverage )
@@ -533,23 +533,32 @@ ImageProcessor
         houghEllipses.drawImage( this.inputImage, 0, 0, null );
         houghEllipses.setColor( Color.red );
 
-        int[][] pairsArray = new int[ maxima.size() ][ 2 ];
+        int[][] pairsArray = new int[ maxima.size()*maxima.size() ][ 2 ];
         int[][] closestPair = new int[ 2 ][ 2 ];
-        for ( int i = 1; i < maxima.size(); ++i )
+
+        // TODO: I guess there is the possibility of getting two parallel lines.
+        //       I should probably deal with that...
+        for ( int j = 0; j < maxima.size(); ++j )
         {
-            // NOTE: Standard equation of line: y = mx + b
-            //       If lines intersect, then m1*x + b1 = m2*x + b2
-            HoughPoint p1 = maxima.get( i-1 );
-            HoughPoint p2 = maxima.get( i );
+            for ( int i = 0; i < maxima.size(); ++i )
+            {
+                if ( i != j )
+                {
+                    // NOTE: Standard equation of line: y = mx + b
+                    //       If lines intersect, then m1*x + b1 = m2*x + b2
+                    HoughPoint p1 = maxima.get( j );
+                    HoughPoint p2 = maxima.get( i );
 
-            double m1 = -( Math.cos( p1.theta ) / Math.sin( p1.theta ) );
-            double b1 = p1.rho / Math.sin( p1.theta );
+                    double m1 = -( Math.cos( p1.theta ) / Math.sin( p1.theta ) );
+                    double b1 = p1.rho / Math.sin( p1.theta );
 
-            double m2 = -( Math.cos( p2.theta ) / Math.sin( p2.theta ) );
-            double b2 = p2.rho / Math.sin( p2.theta );
+                    double m2 = -( Math.cos( p2.theta ) / Math.sin( p2.theta ) );
+                    double b2 = p2.rho / Math.sin( p2.theta );
 
-            pairsArray[ i-1 ][ 0 ] = ( int )( ( b2 - b1 ) / ( m1 - m2 ) );
-            pairsArray[ i-1 ][ 1 ] = ( int )( ( m1*b2 - m2*b1 ) / ( m1 - m2 ) );
+                    pairsArray[ j*maxima.size() + i ][ 0 ] = ( int )( ( b2 - b1 ) / ( m1 - m2 ) );
+                    pairsArray[ j*maxima.size() + i ][ 1 ] = ( int )( ( m1*b2 - m2*b1 ) / ( m1 - m2 ) );
+                }
+            }
         }
 
 
@@ -558,37 +567,29 @@ ImageProcessor
          *
          * * * * */
         double minDist = Double.MAX_VALUE;
-        for ( int j = 0; j < maxima.size()-1; ++j )
+        for ( int j = 0; j < maxima.size(); ++j )
         {
-            for ( int i = j+1; i < maxima.size(); ++i )
+            for ( int i = 0; i < maxima.size(); ++i )
             {
-                int x1x2 = pairsArray[ j ][ 0 ] - pairsArray[ i ][ 0 ];
-                int y1y2 = pairsArray[ j ][ 1 ] - pairsArray[ i ][ 1 ];
-                double dist = Math.sqrt( x1x2*x1x2 + y1y2*y1y2 );
-                if ( ( dist > 2 ) && ( dist < minDist ) )
+                if ( i != j )
                 {
-                    minDist = dist;
-                    closestPair[ 0 ][ 0 ] = pairsArray[ i ][ 0 ];
-                    closestPair[ 0 ][ 1 ] = pairsArray[ i ][ 1 ];
-                    closestPair[ 1 ][ 0 ] = pairsArray[ j ][ 0 ];
-                    closestPair[ 1 ][ 1 ] = pairsArray[ j ][ 1 ];
+                    int x1x2 = pairsArray[ j ][ 0 ] - pairsArray[ i ][ 0 ];
+                    int y1y2 = pairsArray[ j ][ 1 ] - pairsArray[ i ][ 1 ];
+                    double dist = Math.sqrt( x1x2*x1x2 + y1y2*y1y2 );
+                    if ( ( dist > 2 ) && ( dist < minDist ) )
+                    {
+                        minDist = dist;
+                        closestPair[ 0 ][ 0 ] = pairsArray[ i ][ 0 ];
+                        closestPair[ 0 ][ 1 ] = pairsArray[ i ][ 1 ];
+                        closestPair[ 1 ][ 0 ] = pairsArray[ j ][ 0 ];
+                        closestPair[ 1 ][ 1 ] = pairsArray[ j ][ 1 ];
+                    }
                 }
             }
         }
 
-
-        int centerX = 0;
-        int centerY = 0;
-
-        if ( closestPair[ 0 ][ 0 ] > closestPair[ 1 ][ 0 ] )
-            centerX = ( closestPair[ 0 ][ 0 ] + closestPair[ 1 ][ 0 ] ) / 2;
-        else if ( closestPair[ 0 ][ 0 ] < closestPair[ 1 ][ 0 ] )
-            centerX = ( closestPair[ 1 ][ 0 ] + closestPair[ 0 ][ 0 ] ) / 2;
-
-        if ( closestPair[ 0 ][ 1 ] > closestPair[ 1 ][ 1 ] )
-            centerY = ( closestPair[ 0 ][ 1 ] + closestPair[ 1 ][ 1 ] ) / 2;
-        else if ( closestPair[ 0 ][ 1 ] < closestPair[ 1 ][ 1 ] )
-            centerY = ( closestPair[ 1 ][ 1 ] + closestPair[ 0 ][ 1 ] ) / 2;
+        int centerX = ( closestPair[ 0 ][ 0 ] + closestPair[ 1 ][ 0 ] ) / 2;
+        int centerY = ( closestPair[ 0 ][ 1 ] + closestPair[ 1 ][ 1 ] ) / 2;
 
         int minRadiusX = 1;
         int minRadiusY = 1;

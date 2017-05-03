@@ -23,6 +23,8 @@
 \usepackage{tcolorbox}
 \usepackage{wrapfig}
 \usepackage{etoolbox}
+\usepackage{multicol}
+\usepackage{caption}
 \BeforeBeginEnvironment{minted}{\begin{tcolorbox}[left=8mm]\begin{center}}
 \AfterEndEnvironment{minted}{\end{center}\end{tcolorbox}}%
 \usepackage{hyperref}
@@ -148,79 +150,124 @@ pdfkeywords = {M1, ISICG, Traitement, Images, Numérique, Université de Limoges
 %
 
 \section*{\color{unilim_red}\textsc{Introduction}}
-\paragraph{}
-L'objectif de ce projet est de mettre en pratique les notions vues en cours, en particulier la transformée de Hough, en créant une application capable de détecter une cible de fléchettes dans une image. Au delà de la simple détection de la cible, le programme devrait pouvoir reconnaître ses différentes zones ainsi que les numéros autour; si des fléchettes sont présentes dans l'images, elles devraient être détectées aussi, pour éventuellement être capable de déterminer le score.
+\par
+L'objectif de ce projet est de mettre en pratique les notions vues en cours, en particulier la transformée de Hough, en créant une application capable de détecter une cible de fléchettes dans une image. Au-delà de la simple détection de la cible, le programme devrait pouvoir reconnaître ses différentes zones ainsi que les numéros autour; si des fléchettes sont présentes dans l'images, elles devraient être détectées aussi, pour éventuellement être capable de déterminer le score.
 
 \bigskip
+\bigskip
+
+\begin{multicols}{2}
 
 \section{Utilisation de l'application}
-\paragraph{}
+\par
 Une fois l'application lancée depuis Eclipse, une image par défaut est chargée. Pour utiliser une autre image, il suffit de naviguer vers \og File > Open... \fg{} pour sélectionner une nouvelle image. Il est aussi possible de sauvegarder l'image qui est vue dans la partie droite de la fenêtre, après avoir exécuté une opération, en utilisant \og File > Save... \fg{}. La copie (\og Edit > Copy \fg{}) n'est pas implémentée.
-\paragraph{}
-Chaque bouton du panneau de contrôle est indépendant. Par exemple, il est possible de n'appliquer que le flou, mais c'est l'image originale, et non le résultat de celui-ci, qui sera utilisée si la détection des contours est appliquée ensuite.\par
-Différents paramètres peuvent être changés, en ouvrant la barre d'options du panneau de contrôle, pour la détection de contours, la détection de lignes et la détection d'ellipses. Elle sont expliquées dans la suite de ce rapport.
+\par
+Chaque bouton du panneau de contrôle est indépendant. Par exemple, il est possible de n'appliquer que le flou, mais c'est l'image originale, et non le résultat de celui-ci, qui sera utilisée si la détection des contours est appliquée ensuite.
+\par
+Différents paramètres peuvent être changés, en ouvrant la barre d'options du panneau de contrôle, pour la détection de contours, la détection de lignes et la détection d'ellipses ; elles sont expliquées dans la suite de ce rapport. Modifier ces paramètres aura un effet important sur le résultat final.
 
 \section{Détection des contours}
-\paragraph{}
-\begin{wrapfigure}{r}{0.35\textwidth}
-\vspace{-4mm}
-\centering
-\includegraphics[width=0.35\textwidth]{img/front_edges_00.png}
-\vspace{-8mm}
-\caption{Contours trouvés}
-\label{fig:frontEdges00}
-\end{wrapfigure}
+\par
 La détection des contours se fait par une application du filtre de Sobel qu'il est possible d'améliorer grâce aux différentes options disponibles dans le panneau de contrôle. Sélectionner l'ensemble des options rapproche le traitement d'un filtre de Canny \cite{wiki_canny}, avec dans l'ordre :
-\begin{itemize}
+\begin{enumerate}
 \item Réduction du bruit par un filtre de Gauss
 \item Seuillage
 \item Analyse de région (\og blob analysis \fg{})
 \item Amincissement
-\end{itemize}
-Il est à noter que deux seuils peuvent être modifiés. Le seuil haut concerne l'étape de seuillage et détermine la valeur frontière pour séparer les pixels affichés des pixels de fond. Le seuil bas est utilisé par l'analyse locale ; celle-ci ne pourra d'ailleurs fonctionner que si le seuillage est aussi sélectionné.\par
-Lors de l'étape de seuillage, les pixels au-dessus du seuil haut sont marqués comme \og forts \fg{} et les pixels entre les deux seuils sont marqués comme \og faibles \fg{}. Par la suite, un pixel faible ne sera gardé que s'il est connecté à un pixel fort. En fonction de l'image, on peut constater une amélioration du résultat.
+\end{enumerate}
+%\begin{wrapfigure}{r}{0.35\textwidth}
+\begin{center}
+%\vspace{-1mm}
+\centering
+\includegraphics[width=0.9\linewidth]{img/front_edges_00.png}
+\vspace{-2mm}
+\captionof{figure}{Contours trouvés}
+\label{fig:frontEdges00}
+\end{center}
+%\end{wrapfigure}
+\par
+Il est à noter que deux seuils peuvent être modifiés. Le seuil haut concerne l'étape de seuillage et détermine la valeur frontière pour séparer les pixels affichés des pixels de fond. Le seuil bas est utilisé par l'analyse locale ; celle-ci ne pourra d'ailleurs fonctionner que si le seuillage est aussi sélectionné.
+\par
+Le fonctionnement de l'analyse locale est simple : lors de l'étape de seuillage, les pixels au-dessus du seuil haut sont marqués comme \og forts \fg{} et les pixels entre les deux seuils sont marqués comme \og faibles \fg{}. Par la suite, un pixel faible ne sera gardé que s'il est connecté à un pixel fort. En fonction de l'image, nous pouvons constater une amélioration du résultat.
 
 \section{Détection des lignes}
-\paragraph{}
-\begin{wrapfigure}{r}{0.35\textwidth}
-\vspace{-4mm}
-\centering
-\includegraphics[width=0.35\textwidth]{img/front_lines_00.png}
-\vspace{-8mm}
-\caption{Lignes trouvées}
+Le programme utilise la transformée de Hough pour détecter les lignes.
+\begin{center}
+\includegraphics[width=0.9\linewidth]{img/front_lines_00.png}
+\vspace{-2mm}
+\captionof{figure}{Lignes trouvées}
 \label{subfig:frontLines00}
-\end{wrapfigure}
+\end{center}
+
+\par
+Dans l'image obtenue par la détection de contours, on regarde les $i$ pixels blancs. Chacun de ces pixels appartient aux droites à une distance $\rho_{i}$ de l'origine, et orientées à un angle $\theta_{i}$ sur l'intervalle $[0..2\pi]$; dans une matrice de taille $\rho_{max}\times\theta_{max}$, nous incrémentons alors la case correspondante. Plus il y a de pixels le long d'une droite, plus la valeur de la case $(\rho,\theta)$ associée sera élevée, et donc plus il est probable que nous ayons détecté une ligne.
+\par
+Il ne nous reste plus qu'à récupérer les $n$ valeurs les plus élevées pour tracer les $n$ droites détectées en repassant du système polaire au système cartésien grâce aux équivalences $x = \rho \cdot \cos\theta$ et $y = \rho \cdot \sin\theta$.
 
 \section{Détection des ellipses}
-\paragraph{}
+\par
+Dans le cas de cibles de fléchettes, la majorité des lignes trouvées devraient être les délimitations des sections qui convergent vers le centre. Cependant, la détection de lignes n'est jamais exacte, nous aurons donc plusieurs points d'intersection proche du \og vrai \fg{} centre.
+\par
+Pour déterminer le centre qui sera utilisé, nous regardons les lignes deux à deux et mémorisons leur intersection. Une procédure en \og force brute \fg{} détermine ensuite les deux intersections les plus proches, puis le centre choisi sera la moyenne de ces deux intersections.
+
+\end{multicols}
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.85\linewidth]{img/rotated_result_00.png}
+\vspace{-2mm}
+\caption{Résultat non convaincant}
+\label{fig:rotatedResult00}
+\end{figure}
+
+\begin{multicols}{2}
+
+\par
+\`A partir de ce centre, les combinaisons possibles de rayons et d'angles de rotation sont regardées et comparées avec l'image issue de la détection de contours. C'est, là aussi, un procédé en \og force brut \fg{} qui est relativement lent pour un résultat très discutable, comme le montre la figure \ref{fig:rotatedResult00}.
+\par
+Le résultat obtenu peut néanmoins être amélioré en jouant avec les paramètres, et est acceptable dans le cas d'une cible vue de face et suffisamment éclairée (c.f. Figure \ref{fig:frontResult00}).
+
+\section{Travail non réalisé}
+\par
+Par manque de temps, la détection des nombres, des sections de la cible et des fléchettes prévues pour ce projet ne sont pas implémentées.
+\par
+La détection des sections nécessiterait une détection des ellipses plus précise qui, combinée avec la détection de lignes, pourrait permettre un étiquetage des zones trouvées.
+\par
+La détection des nombres et des fléchettes sont plus complexes et demanderaient plus de réflexion.
+
+\end{multicols}
+
 \begin{figure}[!h]
 \centering
 \includegraphics[width=0.85\linewidth]{img/front_result_00.png}
-\vspace{-3mm}
+\vspace{-2mm}
 \caption{Résultat de la détection d'ellipses avec \ref{fig:frontEdges00} et \ref{subfig:frontLines00}}
 \label{fig:frontResult00}
 \end{figure}
 
 \bigskip
+\bigskip
 
 \section*{\color{unilim_red}\textsc{Conclusion}}
-\subsection*{Travail non réalisé}
-
-\subsection*{Aller plus loin}
+\par
+Les résultats obtenus ne sont pas satisfaisants. Au-delà des fonctionnalités manquantes, il serait possible d'améliorer le code existant à plusieurs niveaux.
+\par
+Sur le plan de la conception globale de l'application, nous pourrions procéder à quelques ajustement; elle suit assez librement le patron de conception MVC et son implémentation pourrait être plus stricte.
+\par
+Ensuite, les procédures en \og force brute \fg{} évoquées plus haut dans le rapport pourraient être remplacées. Pour la recherche des points les plus proches, notamment, il existe plusieurs algorithmes qui permettraient de réduire le temps d'exécution, surtout pour un nombre de lignes élevé.
+\par
+Enfin, avec une détection d'ellipses plus précise, il serait possible de déterminer si l'objet détecté est bien une cible, par exemple grâce au nombre d'ellipses concentriques. En l'état, l'application ne serait pas capable de faire la différence entre une cible et une roue de vélo.
 
 \clearpage
-  
-
-\nocite{*}
-
 
 %
 %  --------------
 % | BIBLIOGRAPHY |
 %  --------------
 %
-
-\bibliographystyle{plain}
+  
+\nocite{*}
+\bibliographystyle{unsrt}
 \bibliography{M1_TraitementImages_ROUIJEL}
 
 
