@@ -4,7 +4,7 @@
  *
  *  ====================
  *  Description:
- *
+ *      Gaussian blur kernel and convolution.
  *
  *  ====================
  *  Sources:
@@ -21,8 +21,6 @@ package imageprocessingops.convolution;
 import imageprocessingops.math.Matrix;
 
 import java.awt.image.BufferedImage;
-
-import static com.sun.javafx.util.Utils.clamp;
 
 
 public class
@@ -70,6 +68,7 @@ BlurKernel extends ConvoKernel
         this.divisor = 159.0f;
     }
 
+    @Override
     public BufferedImage
     apply( BufferedImage img )
     {
@@ -81,8 +80,11 @@ BlurKernel extends ConvoKernel
         int[] rgbData = img.getRGB( 0, 0, width, height, null, 0, width );
         int[] rgbOut = new int[ rgbData.length ];
 
-        int w = width - MAT_SIZE + 1;
-        int h = height - MAT_SIZE + 1;
+        // NOTE: Why deal with the border pixels?
+        //       Let's just ignore them...
+        int w = width - MAT_SIZE;
+        int h = height - MAT_SIZE;
+
         for ( int y = 0; y < h; ++y )
         {
             for ( int x = 0; x < w; ++x )
@@ -93,7 +95,7 @@ BlurKernel extends ConvoKernel
 
                 for ( int kRow = 0, pixelIndex = y*width + x;
                       kRow < MAT_SIZE;
-                      ++kRow, pixelIndex += width-MAT_SIZE )
+                      ++kRow, pixelIndex+=w )
                 {
                     for ( int kCol = 0; kCol < MAT_SIZE; ++kCol, ++pixelIndex )
                     {
@@ -111,7 +113,6 @@ BlurKernel extends ConvoKernel
 
                 rgbOut[ ( y + MAT_SIZE/2 )*width + ( x + MAT_SIZE/2 ) ] =
                     ( ( 0xff000000 ) | ( r << 16 ) | ( g << 8 ) | ( b ) );
-
             }
         }
 
@@ -121,44 +122,11 @@ BlurKernel extends ConvoKernel
         return result;
     }
 
-
-    /* NOTE: I would need to rewrite a bunch of stuff to make this work...
-     */
     @Override
-    public float
-    convolve( Matrix input )
+    public int
+    getSize()
     {
-        /*
-        int[] result = new int[ width * height ];
-
-        for ( int imageRow = 0; imageRow < height-1; ++imageRow )
-        {
-            for ( int imageCol = 0; imageCol < width-1; ++imageCol )
-            {
-                double tmp = 0;
-
-                for ( int kernelRow = 0; kernelRow < 3; ++kernelRow )
-                {
-                    for ( int kernelCol = 0; kernelCol < 3; ++kernelCol )
-                    {
-                        int inputX = clamp( imageCol+kernelCol-1, 0, width ) ;
-                        int inputY = clamp( imageRow+kernelRow-1, 0, height );
-
-                        tmp +=
-                            this.kernelX.data[ kernelRow ][ kernelCol ] *
-                                input[ inputY*width + inputX ];
-                    }
-                }
-
-                tmp /= this.divisor;
-
-                result[ imageRow*width + imageCol ] = ( int )tmp;
-            }
-        }
-
-        return result;
-        */
-        return 0.0f;
+        return this.kernelX.cols;
     }
 
 }

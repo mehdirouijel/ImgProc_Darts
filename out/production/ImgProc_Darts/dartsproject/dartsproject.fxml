@@ -20,6 +20,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TitledPane?>
@@ -32,7 +33,15 @@
         <fx:include fx:id="menu" source="dartsproject_menu.fxml" />
     </top>
     <bottom>
-        <Label fx:id="displayedImagePath" />
+        <HBox minWidth="-Infinity">
+            <children>
+                <Label fx:id="displayedImagePath" prefWidth="500.0" />
+                <Label fx:id="execTime" text="Exec. Time: " textAlignment="LEFT">
+               <HBox.margin>
+                  <Insets left="20.0" />
+               </HBox.margin></Label>
+            </children>
+        </HBox>
     </bottom>
     <right>
         <fx:include fx:id="ops" source="dartsproject_ops.fxml" />
@@ -40,27 +49,32 @@
     <center>
         <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="900.0" BorderPane.alignment="CENTER">
             <children>
-                <TitledPane animated="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="500.0" text="Original Image" HBox.hgrow="ALWAYS">
+                <TitledPane fx:id="originalPane" animated="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="500.0" prefHeight="500.0" prefWidth="500.0" text="Original Image" HBox.hgrow="ALWAYS">
                     <content>
-                        <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0">
-                            <center>
-                                <ImageView fx:id="imageView" fitWidth="500.0" preserveRatio="true" BorderPane.alignment="CENTER" />
-                            </center>
-                        </BorderPane>
+                        <ImageView fx:id="imageView" fitWidth="500.0" preserveRatio="true" />
                     </content>
                 </TitledPane>
-                <TabPane fx:id="resultTabs" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="500.0" tabClosingPolicy="UNAVAILABLE" HBox.hgrow="ALWAYS">
-                    <Tab fx:id="houghResultTab" text="Hough Result">
-                        <content>
-                            <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0">
-                                <center>
-                                    <ImageView fx:id="resultView" fitWidth="500.0" preserveRatio="true" BorderPane.alignment="CENTER" />
-                                </center>
-                            </BorderPane>
-                        </content>
-                    </Tab>
+                <TabPane fx:id="resultTabs" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="500.0" prefHeight="500.0" prefWidth="500.0" tabClosingPolicy="UNAVAILABLE" HBox.hgrow="ALWAYS">
                     <tabs>
-                        <Tab fx:id="blurTab" text="Gaussian Blur">
+                        <Tab fx:id="ellipsesResultTab" text="Ellipses Detection">
+                            <content>
+                                <BorderPane prefHeight="200.0" prefWidth="200.0">
+                                    <center>
+                                        <ImageView fx:id="ellipsesResultView" fitWidth="500.0" preserveRatio="true" BorderPane.alignment="CENTER" />
+                                    </center>
+                                </BorderPane>
+                            </content>
+                        </Tab>
+                        <Tab fx:id="linesResultTab" text="Lines Detection">
+                            <content>
+                                <BorderPane prefHeight="200.0" prefWidth="200.0">
+                                    <center>
+                                        <ImageView fx:id="linesResultView" fitWidth="500.0" preserveRatio="true" BorderPane.alignment="CENTER" />
+                                    </center>
+                                </BorderPane>
+                            </content>
+                        </Tab>
+                        <Tab fx:id="blurTab" text="Blur">
                             <content>
                                 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0">
                                     <center>
@@ -69,7 +83,7 @@
                                 </BorderPane>
                             </content>
                         </Tab>
-                        <Tab fx:id="sobelTab" text="Edge Detection (Sobel)">
+                        <Tab fx:id="sobelTab" text="Edge Detection">
                             <content>
                                 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0">
                                     <center>
@@ -78,7 +92,7 @@
                                 </BorderPane>
                             </content>
                         </Tab>
-                        <Tab fx:id="accuTab" text="Hough Accumulator">
+                        <Tab fx:id="accuTab" text="Accumulator">
                             <content>
                                 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0">
                                     <center>
@@ -88,9 +102,9 @@
                             </content>
                         </Tab>
                     </tabs>
-               <padding>
-                  <Insets top="-5.0" />
-               </padding>
+                    <padding>
+                        <Insets top="-5.0" />
+                    </padding>
                 </TabPane>
             </children>
         </HBox>

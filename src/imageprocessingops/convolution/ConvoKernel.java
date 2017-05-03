@@ -4,7 +4,7 @@
  *
  *  ====================
  *  Description:
- *
+ *      Abstract class for a convolution kernel that was part of some work done in class
  *
  *  ====================
  *  Sources:
@@ -16,10 +16,7 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 package imageprocessingops.convolution;
-
 import imageprocessingops.math.Matrix;
-
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 
@@ -31,7 +28,7 @@ ConvoKernel
     Matrix kernelY;
     float divisor;
 
-    public abstract float convolve( Matrix input );
-    //public abstract int[] convolve( int[] input, int width, int height );
+    public abstract BufferedImage apply( BufferedImage img );
+    public abstract int getSize();
 
 }

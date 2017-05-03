@@ -31,8 +31,7 @@
         <Menu text="File">
             <items>
                 <MenuItem text="Open..." onAction="#chooseFile" />
-                <MenuItem text="Save" />
-                <MenuItem text="Save as..." />
+                <MenuItem text="Save as..." onAction="#saveImage" />
                 <SeparatorMenuItem />
                 <MenuItem text="Exit" onAction="#killApp" />
             </items>
@@ -40,14 +39,6 @@
         <Menu text="Edit">
             <items>
                 <MenuItem text="Copy" />
-                <MenuItem text="Cut" />
-                <MenuItem text="Paste" />
-            </items>
-        </Menu>
-        <Menu text="Help">
-            <items>
-                <MenuItem text="Manual" />
-                <MenuItem text="About" />
             </items>
         </Menu>
     </menus>

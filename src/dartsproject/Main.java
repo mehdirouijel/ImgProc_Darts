@@ -4,7 +4,7 @@
  *
  *  ====================
  *  Description:
- *
+ *      The entry point of the program. Only sets up JavaFX.
  *
  *  ====================
  *  Sources:

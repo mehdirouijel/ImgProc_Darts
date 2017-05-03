@@ -4,7 +4,8 @@
  *
  *  ====================
  *  Description:
- *
+ *      Implementation of a Singleton pattern to share data accross
+ *      the application.
  *
  *  ====================
  *  Sources:
@@ -64,6 +65,7 @@ Context
     private String currentImagePath = null;
     private File currentFile = null;
     private BufferedImage houghAccu = null;
+    private BufferedImage sobelImage = null;
 
 
     public Image
@@ -89,22 +91,6 @@ Context
         return this.currentImage;
     }
 
-    public void
-    setCurrentImage( String path )
-    {
-        File f = new File( path );
-
-        try
-        {
-            this.currentImage = new Image( f.toURI().toURL().toString() );
-            this.currentImagePath = path;
-            this.currentFile = f;
-        }
-        catch( MalformedURLException e )
-        {
-            e.printStackTrace();
-        }
-    }
     public void
     setCurrentImage( File file )
     {
@@ -152,4 +138,16 @@ Context
     {
         this.houghAccu = img;
     }
+
+    public BufferedImage
+    getSobelImage()
+    {
+        return this.sobelImage;
+    }
+    public void
+    setSobelImage( BufferedImage img )
+    {
+        this.sobelImage = img;
+    }
+
 }

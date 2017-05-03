@@ -20,49 +20,65 @@
 
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<?import javafx.scene.control.CheckBox?>
-<VBox fx:id="opsPanel" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="35.0" minWidth="-Infinity" prefWidth="151.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dartsproject.OpsController">
+
+<VBox fx:id="opsPanel" alignment="TOP_CENTER" spacing="10.0" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="175.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dartsproject.OpsController">
     <children>
-        <Label text="Control Panel" />
-        <Accordion maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0">
+        <Label text="Control Panel" style="-fx-font-size:12pt;-fx-font-weight:bold;" />
+        <Accordion expandedPane="$optionsPane" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="170.0">
             <panes>
-                <TitledPane animated="false" text="Hough" maxWidth="150.0">
+                <TitledPane fx:id="optionsPane" animated="false" maxWidth="165.0" prefHeight="350.0" prefWidth="165.0" text="Options">
                     <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="150.0">
-                            <children>
-                                <VBox prefHeight="200.0" prefWidth="150.0">
-                                    <children>
-                                        <Label fx:id="houghLinesLabel" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0" text="Hough lines: 32" />
-                                        <Slider fx:id="houghLinesNb" blockIncrement="1" max="100" maxWidth="1.7976931348623157E308" min="1" minWidth="-Infinity" prefWidth="150.0" value="32" />
-                                        <CheckBox fx:id="useBlurHough" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" text="Use Blur" textAlignment="CENTER" />
-                                        <Button id="btnHough" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#runHough" prefHeight="25.0" prefWidth="150.0" text="Run Hough" textAlignment="CENTER" />
-                                        <Button id="btnHoughLines" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#drawHoughLines" prefHeight="25.0" prefWidth="150.0" text="Draw Hough Lines" textAlignment="CENTER" />
-                                    </children>
-                                </VBox>
-                            </children>
-                        </AnchorPane>
-                    </content>
-                </TitledPane>
-                <TitledPane animated="false" text="Sobel" maxWidth="150.0">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="150.0">
-                            <children>
-                                <VBox prefHeight="200.0" prefWidth="150.0">
-                                    <CheckBox fx:id="useBlurSobel" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" text="Use Blur" textAlignment="CENTER" />
-                                    <Button id="btnSobel" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#runSobel" prefHeight="25.0" prefWidth="150.0" text="Run Sobel" textAlignment="CENTER" />
-                                </VBox>
-                            </children>
+                        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="180.0" prefWidth="160.0">
+                            <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="155.0" spacing="20.0">
+                                <children>
+                                    <VBox prefHeight="200.0" prefWidth="150.0" spacing="1.0">
+                                        <children>
+                                            <Label text="Sobel Options" alignment="TOP_LEFT" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0" style="-fx-font-weight:bold;" />
+                                            <CheckBox fx:id="useBlur" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" text="Use Blur" textAlignment="CENTER" />
+                                            <CheckBox fx:id="useThresholding" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" text="Use Thresholding" textAlignment="CENTER" />
+                                            <Label fx:id="lowThreshLabel" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0" text="Low Thresh.: 0.1" />
+                                            <Slider fx:id="lowThresh" blockIncrement="0.1" max="1.0" maxWidth="1.7976931348623157E308" min="0.0" minWidth="-Infinity" prefWidth="150.0" value="0.1" />
+                                            <Label fx:id="highThreshLabel" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0" text="High Thresh.: 0.2" />
+                                            <Slider fx:id="highThresh" blockIncrement="0.1" max="1.0" maxWidth="1.7976931348623157E308" min="0.0" minWidth="-Infinity" prefWidth="150.0" value="0.2" />
+                                            <CheckBox fx:id="useBlobAnalysis" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" text="Use Blob Analysis" textAlignment="CENTER" />
+                                            <CheckBox fx:id="useThinning" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" text="Use Thinning" textAlignment="CENTER" />
+                                        </children>
+                                    </VBox>
+                                    <VBox prefHeight="200.0" prefWidth="150.0" spacing="1.0">
+                                        <children>
+                                            <Label text="Line Detection Options" alignment="TOP_LEFT" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0" style="-fx-font-weight:bold;" />
+                                            <Label fx:id="houghLinesLabel" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0" text="Hough lines: 20" />
+                                            <Slider fx:id="houghLinesNb" blockIncrement="1" max="100" maxWidth="1.7976931348623157E308" min="1" minWidth="-Infinity" prefWidth="150.0" value="20" />
+                                        </children>
+                                    </VBox>
+                                    <VBox prefHeight="200.0" prefWidth="150.0" spacing="1.0">
+                                        <children>
+                                            <Label text="Ellipse Detection Options" alignment="TOP_LEFT" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0" style="-fx-font-weight:bold;" />
+                                            <Label fx:id="nbOfEllipsesLabel" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0" text="Ellipses Count: 1" />
+                                            <Slider fx:id="nbOfEllipses" blockIncrement="1" max="10" maxWidth="1.7976931348623157E308" min="1" minWidth="-Infinity" prefWidth="150.0" value="1" />
+                                            <CheckBox fx:id="showCenterOfEllipse" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" text="Show Ellipse Center" textAlignment="CENTER" />
+                                            <CheckBox fx:id="showFoundEllipses" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" text="Show Found Ellipses" textAlignment="CENTER" />
+                                        </children>
+                                    </VBox>
+                                </children>
+                            </VBox>
                         </AnchorPane>
                     </content>
                 </TitledPane>
             </panes>
         </Accordion>
-        <Button id="btnBlur" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#runBlur" prefHeight="25.0" prefWidth="150.0" text="Run Gaussian Blur" textAlignment="CENTER" />
+        <VBox>
+            <Button id="btnBlur" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#runBlur" prefHeight="25.0" prefWidth="170.0" text="Run Gaussian Blur" textAlignment="CENTER" />
+            <Button id="btnSobel" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#runSobel" prefHeight="25.0" prefWidth="170.0" text="Run Sobel" textAlignment="CENTER" />
+            <Button id="btnLines" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#runHoughLines" prefHeight="25.0" prefWidth="170.0" text="Detect Lines" textAlignment="CENTER" />
+            <Button id="btnEllipses" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#runEllipsesDetection" prefHeight="25.0" prefWidth="170.0" text="Detect Ellipses" textAlignment="CENTER" />
+        </VBox>
     </children>
 </VBox>

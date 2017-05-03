@@ -4,13 +4,18 @@
  *
  *  ====================
  *  Description:
- *
+ *      The heart of the application, where the image processing algorithms are
+ *      actually implemented.
  *
  *  ====================
  *  Sources:
  *      https://rosettacode.org/wiki/Image_convolution#Java
  *      http://vase.essex.ac.uk/software/HoughTransform/HoughTransform.java.html
  *      http://homepages.inf.ed.ac.uk/rbf/HIPR2/thin.htm
+ *      http://northstar-www.dartmouth.edu/doc/idl/html_6.2/Thinning_Image_Objects.html
+ *      https://math.stackexchange.com/a/1607673
+ *      http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.1.8792&rep=rep1&type=pdf
+ *      http://coding-experiments.blogspot.fr/2011/05/ellipse-detection-in-image-by-using.html
  *
  *  ====================
  *  Author:
@@ -21,14 +26,14 @@
 package imageprocessingops;
 
 import java.awt.*;
+import java.awt.geom.GeneralPath;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import imageprocessingops.convolution.BlurKernel;
+import dartsproject.Context;
 import imageprocessingops.convolution.ConvoKernel;
 import imageprocessingops.convolution.SobelKernel;
-import imageprocessingops.math.Matrix;
 import imageprocessingops.math.HoughPoint;
 
 
@@ -37,26 +42,21 @@ ImageProcessor
 {
 
     private BufferedImage inputImage = null;
-    private int[] rgbData = null;
     private ConvoKernel kernel = null;
-    private int[][] accumulator = null;
     private int nbOfLines;
+    private boolean thresholding = false;
+    private boolean blobAnalysis = false;
+    private boolean thinning = false;
+    private float sobelLoThresh;
+    private float sobelHiThresh;
+    private int ellipsesCount;
+    private boolean showEllipseCenter;
+    private boolean showEllipsesFound;
 
     public
     ImageProcessor()
     {
         this.nbOfLines = 32;
-    }
-    public
-    ImageProcessor( ConvoKernel theKernel )
-    {
-        this.kernel = theKernel;
-    }
-    public
-    ImageProcessor( ConvoKernel theKernel, BufferedImage theImage )
-    {
-        this.kernel = theKernel;
-        this.inputImage = theImage;
     }
 
     public void
@@ -67,259 +67,253 @@ ImageProcessor
     public void
     setInputImage( BufferedImage theImage )
     {
-        int width = theImage.getWidth();
-        int height = theImage.getHeight();
-
         this.inputImage = theImage;
-        this.rgbData = this.inputImage.getRGB( 0, 0, width, height, null, 0, width );
     }
     public void
     setNbOfLines( int nbOfLines )
     {
         this.nbOfLines = nbOfLines;
     }
-
-
-    private BufferedImage
-    rgbDataToImage( int[][] rgbData, int width, int height )
+    public void
+    setThresholding( boolean b )
     {
-        BufferedImage result = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
-
-        for ( int y = 0; y < height; ++y )
-        {
-            for ( int x = 0; x < width; ++x )
-            {
-                int r = rgbData[ 0 ][ y*width + x ];
-                int g = rgbData[ 1 ][ y*width + x ];
-                int b = rgbData[ 2 ][ y*width + x ];
-
-                int rgb = ( ( r << 16 ) | ( g << 8 ) | ( b ) | ( 0xFF000000 ) );
-
-                result.setRGB( x, y, rgb );
-            }
-        }
-
-        return result;
+        this.thresholding = b;
+    }
+    public void
+    setBlobAnalysis( boolean b )
+    {
+        this.blobAnalysis = b;
+    }
+    public void
+    setThinning( boolean b )
+    {
+        this.thinning = b;
+    }
+    public void
+    setSobelLoThresh( float f )
+    {
+        this.sobelLoThresh = f;
+    }
+    public void
+    setSobelHiThresh( float f )
+    {
+        this.sobelHiThresh = f;
+    }
+    public void
+    setEllipsesCount( int i )
+    {
+        this.ellipsesCount = i;
+    }
+    public void
+    setShowEllipseCenter( boolean b )
+    {
+        this.showEllipseCenter = b;
+    }
+    public void
+    setShowEllipsesFound( boolean b )
+    {
+        this.showEllipsesFound = b;
     }
 
     public BufferedImage
     runKernel( BufferedImage img )
     {
-        final int THRESH_HI = 45;
-        final int THRESH_LO = 35;
         final int STRG_EDGE =  1;
         final int WEAK_EDGE = -1;
         final int NO_EDGE   =  0;
 
         int height = img.getHeight();
         int width = img.getWidth();
-        BufferedImage result = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
-        int[][] blobAnalysis = new int[ height ][ width ];
+        BufferedImage result;
+        int[][] blob = new int[ height ][ width ];
+
+
+        result = this.kernel.apply( img );
+
 
         if ( this.kernel instanceof SobelKernel )
         {
-            // NOTE: 3 away from the border because the bluring creates an edge by making
-            // the border pixels transparent.
-            // There is probably a better way to deal with this.
-            for ( int row = 3; row < height - 3; ++row )
+            if ( this.thresholding )
             {
-                for ( int col = 3; col < width - 3; ++col )
+                /*  THRESHOLDING
+                 *  Gives a better edge detection.
+                 *
+                 * * * * */
+
+                for ( int y = 0; y < result.getHeight(); ++y )
                 {
-                        Matrix imageChunk = extractValueImageChunk( 3, row, col );
-
-                        float newPixel = kernel.convolve( imageChunk );
-
-                        result.setRGB( col, row, Color.HSBtoRGB( 0.0f, 0.0f, newPixel ) );
-                }
-            }
-
-            /* THRESHOLDING
-             * Gives a better edge detection.
-             */
-
-            for ( int y = 0; y < result.getHeight(); ++y )
-            {
-                for ( int x = 0; x < result.getWidth(); ++x )
-                {
-                    int r = new Color( result.getRGB( x, y ) ).getRed();
-                    int g = new Color( result.getRGB( x, y ) ).getGreen();
-                    int b = new Color( result.getRGB( x, y ) ).getBlue();
-
-                    int avg = ( r + g + b ) / 3;
-
-                    if ( avg >= THRESH_HI )
+                    for ( int x = 0; x < result.getWidth(); ++x )
                     {
-                        // NOTE: Strong edge pixel.
-                        result.setRGB( x, y, 0xffffffff );
-                        blobAnalysis[ y ][ x ] = STRG_EDGE;
-                    }
-                    else if ( avg >= THRESH_LO )
-                    {
-                        // NOTE: Weak edge pixel.
-                        result.setRGB( x, y, 0xff000000 );
-                        blobAnalysis[ y ][ x ] = WEAK_EDGE;
-                    }
-                    else
-                    {
-                        // NOTE: Just noise.
-                        result.setRGB( x, y, 0xff000000 );
-                        blobAnalysis[ y ][ x ] = NO_EDGE;
-                    }
-                }
-            }
+                        int r = new Color( result.getRGB( x, y ) ).getRed();
+                        int g = new Color( result.getRGB( x, y ) ).getGreen();
+                        int b = new Color( result.getRGB( x, y ) ).getBlue();
+                        float[] hsv = new float[ 3 ];
 
-            /* BLOB ANALYSIS
-             * Keep "weak" points if connected to "strong" ones.
-             */
-            for ( int y = 0; y < result.getHeight(); ++y )
-            {
-                for ( int x = 0; x < result.getWidth(); ++x )
-                {
-                    if ( blobAnalysis[ y ][ x ] == WEAK_EDGE )
-                    {
-                        if ( ( blobAnalysis[ y-1 ][ x-1 ] == STRG_EDGE ) ||
-                             ( blobAnalysis[ y-1 ][ x   ] == STRG_EDGE ) ||
-                             ( blobAnalysis[ y-1 ][ x+1 ] == STRG_EDGE ) ||
-                             ( blobAnalysis[ y   ][ x-1 ] == STRG_EDGE ) ||
-                             ( blobAnalysis[ y   ][ x+1 ] == STRG_EDGE ) ||
-                             ( blobAnalysis[ y+1 ][ x-1 ] == STRG_EDGE ) ||
-                             ( blobAnalysis[ y+1 ][ x   ] == STRG_EDGE ) ||
-                             ( blobAnalysis[ y+1 ][ x+1 ] == STRG_EDGE ) )
+                        Color.RGBtoHSB( r, g, b, hsv);
+
+                        if ( hsv[ 2 ] >= sobelHiThresh )
                         {
-                            // NOTE: The weak point is connected to a strong point.
+                            // NOTE: Strong edge pixel.
                             result.setRGB( x, y, 0xffffffff );
+                            blob[ y ][ x ] = STRG_EDGE;
+                        }
+                        else if ( hsv[ 2 ] >= sobelLoThresh )
+                        {
+                            // NOTE: Weak edge pixel.
+                            result.setRGB( x, y, 0xff000000 );
+                            blob[ y ][ x ] = WEAK_EDGE;
+                        }
+                        else
+                        {
+                            // NOTE: Just noise.
+                            result.setRGB( x, y, 0xff000000 );
+                            blob[ y ][ x ] = NO_EDGE;
                         }
                     }
                 }
             }
 
-            /* THINNING
-             * kernel format : 1 = foreground colour
-             *                 0 = background colour
-             *                -1 = don't care
-             */
-            boolean somethingChanged = true;
-            BufferedImage tmpImg = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
-            int[][] a = {
-                { 0, 0, 0,
-                  -1, 1, -1,
-                  1, 1, 1},
-                { 1, -1, 0,
-                  1, 1, 0,
-                  1, -1, 0 },
-                { 1, 1, 1,
-                  -1, 1, -1,
-                  0, 0, 0 },
-                { 0, -1, 1,
-                  0, 1, 1,
-                  0, -1, 1 }
-            };
+            if ( this.blobAnalysis )
+            {
+                /*  BLOB ANALYSIS
+                 *  Keep "weak" points if connected to "strong" ones.
+                 *
+                 * * * * */
 
-            int[][] b = {
-                { -1, 0, 0,
-                  1, 1, 0,
-                  -1, 1, -1 },
-                { -1, 1, -1,
-                  1, 1, 0,
-                  -1, 0, 0 },
-                { -1, 1, -1,
-                  0, 1, 1,
-                  0, 0, -1 },
-                { 0, 0, -1,
-                  0, 1, 1,
-                  -1, 1, -1 }
-            };
-
-            //while ( somethingChanged )
-            //{
-                somethingChanged = false;
-
-                for ( int i = 0; i < 4; ++i )
+                for ( int y = 1; y < result.getHeight()-1; ++y )
                 {
-                    for ( int y = 1; y < height-1; ++y )
+                    for ( int x = 1; x < result.getWidth()-1; ++x )
                     {
-                        for ( int x = 1; x < width-1; ++x )
+                        if ( blob[ y ][ x ] == WEAK_EDGE )
                         {
-                            int nw = ( new Color( result.getRGB( x-1, y-1 ) ).getRed() % 254 > 0) ? 1 : 0;
-                            int n  = ( new Color( result.getRGB(   x, y-1 ) ).getRed() % 254 > 0) ? 1 : 0;
-                            int ne = ( new Color( result.getRGB( x+1, y-1 ) ).getRed() % 254 > 0) ? 1 : 0;
-                            int w  = ( new Color( result.getRGB( x-1,   y ) ).getRed() % 254 > 0) ? 1 : 0;
-                            int c  = ( new Color( result.getRGB(   x,   y ) ).getRed() % 254 > 0) ? 1 : 0;
-                            int e  = ( new Color( result.getRGB( x+1,   y ) ).getRed() % 254 > 0) ? 1 : 0;
-                            int sw = ( new Color( result.getRGB( x-1, y+1 ) ).getRed() % 254 > 0) ? 1 : 0;
-                            int s  = ( new Color( result.getRGB(   x, y+1 ) ).getRed() % 254 > 0) ? 1 : 0;
-                            int se = ( new Color( result.getRGB( x+1, y+1 ) ).getRed() % 254 > 0) ? 1 : 0;
-                            if ( ( nw > 0 ) &&
-                                 (  n > 0 ) &&
-                                 ( ne > 0 ) &&
-                                 (  w > 0 ) &&
-                                 (  c > 0 ) &&
-                                 (  e > 0 ) &&
-                                 ( sw > 0 ) &&
-                                 (  s > 0 ) &&
-                                 ( se > 0 ) )
+                            if ( ( blob[ y-1 ][ x-1 ] == STRG_EDGE ) ||
+                                 ( blob[ y-1 ][ x   ] == STRG_EDGE ) ||
+                                 ( blob[ y-1 ][ x+1 ] == STRG_EDGE ) ||
+                                 ( blob[ y   ][ x-1 ] == STRG_EDGE ) ||
+                                 ( blob[ y   ][ x+1 ] == STRG_EDGE ) ||
+                                 ( blob[ y+1 ][ x-1 ] == STRG_EDGE ) ||
+                                 ( blob[ y+1 ][ x   ] == STRG_EDGE ) ||
+                                 ( blob[ y+1 ][ x+1 ] == STRG_EDGE ) )
                             {
-                                if ( ( nw == a[ i ][ 0 ] ) &&
-                                     (  n == a[ i ][ 1 ] ) &&
-                                     ( ne == a[ i ][ 2 ] ) &&
-                                     (  w == a[ i ][ 3 ] ) &&
-                                     (  c == a[ i ][ 4 ] ) &&
-                                     (  e == a[ i ][ 5 ] ) &&
-                                     ( sw == a[ i ][ 6 ] ) &&
-                                     (  s == a[ i ][ 7 ] ) &&
-                                     ( se == a[ i ][ 8 ] ) )
-                                {
-                                    tmpImg.setRGB( x, y, 0xffffffff );
-                                    somethingChanged = true;
-                                }
-                            }
-                            else
-                            {
-                                tmpImg.setRGB( x, y, 0xff000000 );
-                            }
-
-                            /*
-                            if ( ( new Color( result.getRGB( x-1, y-1 ) ).getRed() % 254 == b[ i ][ 0 ] ) &&
-                                 ( new Color( result.getRGB(   x, y-1 ) ).getRed() % 254 == b[ i ][ 1 ] ) &&
-                                 ( new Color( result.getRGB( x+1, y-1 ) ).getRed() % 254 == b[ i ][ 2 ] ) &&
-                                 ( new Color( result.getRGB( x-1,   y ) ).getRed() % 254 == b[ i ][ 3 ] ) &&
-                                 ( new Color( result.getRGB(   x,   y ) ).getRed() % 254 == b[ i ][ 4 ] ) &&
-                                 ( new Color( result.getRGB( x+1,   y ) ).getRed() % 254 == b[ i ][ 5 ] ) &&
-                                 ( new Color( result.getRGB( x-1, y+1 ) ).getRed() % 254 == b[ i ][ 6 ] ) &&
-                                 ( new Color( result.getRGB(   x, y+1 ) ).getRed() % 254 == b[ i ][ 7 ] ) &&
-                                 ( new Color( result.getRGB( x+1, y+1 ) ).getRed() % 254 == b[ i ][ 8 ] ) )
-                            {
+                                // NOTE: The weak point is connected to a strong point.
                                 result.setRGB( x, y, 0xffffffff );
-                                somethingChanged = true;
                             }
-                            else
-                            {
-                                result.setRGB( x, y, 0xff000000 );
-                            }
-                            */
                         }
                     }
                 }
-            //}
+            }
 
-            result = tmpImg;
-        }
-        else if ( this.kernel instanceof BlurKernel )
-        {
-                    /*
-                    int[][] rgbChannels = extractRGBChannels();
+            if ( this.thinning )
+            {
+                /*  THINNING
+                 *  From paper given in class.
+                 *
+                 * * * * */
 
-                    for ( int i = 0; i < 3; ++i )
+                boolean[][] b = new boolean[ height ][ width ];
+                boolean[] v = new boolean[ 8 ];
+
+                // NOTE: First pass
+                for ( int y = 1; y < height-1; ++y )
+                {
+                    for ( int x = 1; x < width-1; ++x )
                     {
-                        rgbChannels[ i ] = kernel.convolve( rgbChannels[ i ], width, height );
+                        if ( result.getRGB( x, y ) != 0xff000000 )
+                        {
+                            v[ 0 ] = ( result.getRGB(   x, y+1 ) == 0xff000000 );
+                            v[ 1 ] = ( result.getRGB( x+1, y+1 ) == 0xff000000 );
+                            v[ 2 ] = ( result.getRGB( x+1,   y ) == 0xff000000 );
+                            v[ 3 ] = ( result.getRGB( x+1, y-1 ) == 0xff000000 );
+                            v[ 4 ] = ( result.getRGB(   x, y-1 ) == 0xff000000 );
+                            v[ 5 ] = ( result.getRGB( x-1, y-1 ) == 0xff000000 );
+                            v[ 6 ] = ( result.getRGB( x-1,   y ) == 0xff000000 );
+                            v[ 7 ] = ( result.getRGB( x-1, y+1 ) == 0xff000000 );
 
+                            int transitions = 0;
+                            int neighbourCount = 0;
+                            for ( int i = 0; i < 8; ++i )
+                            {
+                                if ( v[ i ] )
+                                    neighbourCount++;
+
+                                if ( ( !v[ i ] ) && ( v[ ( i + 1 ) % 8 ] ) )
+                                    transitions++;
+                            }
+
+                            if ( ( transitions == 1 ) &&
+                                 ( neighbourCount >= 2 ) &&
+                                 ( neighbourCount <= 6 ) &&
+                                 ( v[ 0 ] || v[ 2 ] || v[ 4 ] ) &&
+                                 ( v[ 2 ] || v[ 4 ] || v[ 6 ] ) )
+                            {
+                                b[ y ][ x ] = true;
+                            }
+                        }
                     }
-                    //result.setRGB( col, row, rgb );
+                }
 
-                    result = rgbDataToImage( rgbChannels, width, height );
-                    */
+                for ( int y = 0; y < height; ++y )
+                {
+                    for ( int x = 0; x < width; ++x )
+                    {
+                        if ( b[ y ][ x ] )
+                        {
+                            result.setRGB( x, y, 0xff000000 );
+                            b[ y ][ x ] = false;
+                        }
+                    }
+                }
 
-            result = ( ( BlurKernel ) this.kernel ).apply( img );
+                // NOTE: Second pass
+                for ( int y = 1; y < height-1; ++y )
+                {
+                    for ( int x = 1; x < width-1; ++x )
+                    {
+                        if ( result.getRGB( x, y ) != 0xff000000 )
+                        {
+                            v[ 0 ] = ( result.getRGB(   x, y+1 ) == 0xff000000 );
+                            v[ 1 ] = ( result.getRGB( x+1, y+1 ) == 0xff000000 );
+                            v[ 2 ] = ( result.getRGB( x+1,   y ) == 0xff000000 );
+                            v[ 3 ] = ( result.getRGB( x+1, y-1 ) == 0xff000000 );
+                            v[ 4 ] = ( result.getRGB(   x, y-1 ) == 0xff000000 );
+                            v[ 5 ] = ( result.getRGB( x-1, y-1 ) == 0xff000000 );
+                            v[ 6 ] = ( result.getRGB( x-1,   y ) == 0xff000000 );
+                            v[ 7 ] = ( result.getRGB( x-1, y+1 ) == 0xff000000 );
+
+                            int transitions = 0;
+                            int neighbourCount = 0;
+                            for ( int i = 0; i < 8; ++i )
+                            {
+                                if ( v[ i ] )
+                                    neighbourCount++;
+
+                                if ( ( !v[ i ] ) && ( v[ ( i + 1 ) % 8 ] ) )
+                                    transitions++;
+                            }
+
+                            if ( ( transitions == 1 ) &&
+                                 ( neighbourCount >= 2 ) &&
+                                 ( neighbourCount <= 6 ) &&
+                                 ( v[ 0 ] || v[ 2 ] || v[ 6 ] ) &&
+                                 ( v[ 0 ] || v[ 4 ] || v[ 6 ] ) )
+                            {
+                                b[ y ][ x ] = true;
+                            }
+                        }
+                    }
+                }
+
+                for ( int y = 0; y < height; ++y )
+                {
+                    for ( int x = 0; x < width; ++x )
+                    {
+                        if ( b[ y ][ x ] )
+                        {
+                            result.setRGB( x, y, 0xff000000 );
+                        }
+                    }
+                }
+            }
         }
 
         return result;
@@ -333,116 +327,17 @@ ImageProcessor
     }
 
 
-    /*
-    private int[][]
-    extractRGBChannels()
-    {
-        int width = this.inputImage.getWidth();
-        int height = this.inputImage.getHeight();
-        int[] rChannel = new int[ width*height ];
-        int[] gChannel = new int[ width*height ];
-        int[] bChannel = new int[ width*height ];
-
-        for ( int y = 0; y < height; ++y )
-        {
-            for ( int x = 0; x < width; ++x )
-            {
-                int rgb = this.rgbData[ y*width + x ];
-                rChannel[ y*width + x ] = ( rgb >>> 16 ) & 0xff;
-                gChannel[ y*width + x ] = ( rgb >>>  8 ) & 0xff;
-                bChannel[ y*width + x ] = ( rgb        ) & 0xff;
-            }
-        }
-
-        return ( new int[][] { rChannel, gChannel, bChannel } );
-    }
-    */
-
-
-    private Matrix
-    extractValueImageChunk( int squareMatrixSize,
-                            int centerRow,
-                            int centerCol )
-    {
-        int[] pixel = new int[ squareMatrixSize ];
-        float[] hsv = new float[ squareMatrixSize ];
-
-        pixel[ 0 ] = new Color( this.inputImage.getRGB( centerCol-1, centerRow-1 ) ).getRed();
-        pixel[ 1 ] = new Color( this.inputImage.getRGB( centerCol-1, centerRow-1 ) ).getGreen();
-        pixel[ 2 ] = new Color( this.inputImage.getRGB( centerCol-1, centerRow-1 ) ).getBlue();
-        Color.RGBtoHSB( pixel[ 0 ], pixel[ 1 ], pixel[ 2 ], hsv );
-        float value00 = hsv[ 2 ];
-
-        pixel[ 0 ] = new Color( this.inputImage.getRGB( centerCol  , centerRow-1 ) ).getRed();
-        pixel[ 1 ] = new Color( this.inputImage.getRGB( centerCol  , centerRow-1 ) ).getGreen();
-        pixel[ 2 ] = new Color( this.inputImage.getRGB( centerCol  , centerRow-1 ) ).getBlue();
-        Color.RGBtoHSB( pixel[ 0 ], pixel[ 1 ], pixel[ 2 ], hsv );
-        float value01 = hsv[ 2 ];
-
-        pixel[ 0 ] = new Color( this.inputImage.getRGB( centerCol+1, centerRow-1 ) ).getRed();
-        pixel[ 1 ] = new Color( this.inputImage.getRGB( centerCol+1, centerRow-1 ) ).getGreen();
-        pixel[ 2 ] = new Color( this.inputImage.getRGB( centerCol+1, centerRow-1 ) ).getBlue();
-        Color.RGBtoHSB( pixel[ 0 ], pixel[ 1 ], pixel[ 2 ], hsv );
-        float value02 = hsv[ 2 ];
-
-        pixel[ 0 ] = new Color( this.inputImage.getRGB( centerCol-1, centerRow   ) ).getRed();
-        pixel[ 1 ] = new Color( this.inputImage.getRGB( centerCol-1, centerRow   ) ).getGreen();
-        pixel[ 2 ] = new Color( this.inputImage.getRGB( centerCol-1, centerRow   ) ).getBlue();
-        Color.RGBtoHSB( pixel[ 0 ], pixel[ 1 ], pixel[ 2 ], hsv );
-        float value10 = hsv[ 2 ];
-
-        pixel[ 0 ] = new Color( this.inputImage.getRGB( centerCol  , centerRow   ) ).getRed();
-        pixel[ 1 ] = new Color( this.inputImage.getRGB( centerCol  , centerRow   ) ).getGreen();
-        pixel[ 2 ] = new Color( this.inputImage.getRGB( centerCol  , centerRow   ) ).getBlue();
-        Color.RGBtoHSB( pixel[ 0 ], pixel[ 1 ], pixel[ 2 ], hsv );
-        float value11 = hsv[ 2 ];
-
-        pixel[ 0 ] = new Color( this.inputImage.getRGB( centerCol+1, centerRow   ) ).getRed();
-        pixel[ 1 ] = new Color( this.inputImage.getRGB( centerCol+1, centerRow   ) ).getGreen();
-        pixel[ 2 ] = new Color( this.inputImage.getRGB( centerCol+1, centerRow   ) ).getBlue();
-        Color.RGBtoHSB( pixel[ 0 ], pixel[ 1 ], pixel[ 2 ], hsv );
-        float value12 = hsv[ 2 ];
-
-        pixel[ 0 ] = new Color( this.inputImage.getRGB( centerCol-1, centerRow+1 ) ).getRed();
-        pixel[ 1 ] = new Color( this.inputImage.getRGB( centerCol-1, centerRow+1 ) ).getGreen();
-        pixel[ 2 ] = new Color( this.inputImage.getRGB( centerCol-1, centerRow+1 ) ).getBlue();
-        Color.RGBtoHSB( pixel[ 0 ], pixel[ 1 ], pixel[ 2 ], hsv );
-        float value20 = hsv[ 2 ];
-
-        pixel[ 0 ] = new Color( this.inputImage.getRGB( centerCol  , centerRow+1 ) ).getRed();
-        pixel[ 1 ] = new Color( this.inputImage.getRGB( centerCol  , centerRow+1 ) ).getGreen();
-        pixel[ 2 ] = new Color( this.inputImage.getRGB( centerCol  , centerRow+1 ) ).getBlue();
-        Color.RGBtoHSB( pixel[ 0 ], pixel[ 1 ], pixel[ 2 ], hsv );
-        float value21 = hsv[ 2 ];
-
-        pixel[ 0 ] = new Color( this.inputImage.getRGB( centerCol+1, centerRow+1 ) ).getRed();
-        pixel[ 1 ] = new Color( this.inputImage.getRGB( centerCol+1, centerRow+1 ) ).getGreen();
-        pixel[ 2 ] = new Color( this.inputImage.getRGB( centerCol+1, centerRow+1 ) ).getBlue();
-        Color.RGBtoHSB( pixel[ 0 ], pixel[ 1 ], pixel[ 2 ], hsv );
-        float value22 = hsv[ 2 ];
-
-        Matrix imageChunk = new Matrix( 3, 3 );
-        imageChunk.data = new float[][] {
-                { value00, value01, value02 },
-                { value10, value11, value12 },
-                { value20, value21, value22 }
-        };
-
-        return imageChunk;
-    }
-
-
     public BufferedImage
-    runHough( BufferedImage inputImage )
+    runHoughLines( BufferedImage inputImage )
     {
         int width = inputImage.getWidth();
         int height = inputImage.getHeight();
         int maxDistance = ( int )Math.sqrt( width*width + height*height );
 
         int accumulatorWidth = maxDistance;
-        int accumulatorHeight = 180;
+        int accumulatorHeight = 360;
         // NOTE: 2D array should have every element initialised to 0.
-        accumulator = new int[ accumulatorHeight ][ accumulatorWidth ];
+        int[][] accumulator = new int[ accumulatorHeight ][ accumulatorWidth ];
         BufferedImage houghSpace = new BufferedImage( accumulatorWidth,
                                                       accumulatorHeight,
                                                       BufferedImage.TYPE_INT_ARGB );
@@ -452,10 +347,9 @@ ImageProcessor
         {
             for ( int x = 0; x < width; ++x )
             {
-                // NOTE: '-16777216' == '0xFF000000' ( == black in ARGB )
-                if ( inputImage.getRGB( x, y ) != -16777216 )
+                if ( inputImage.getRGB( x, y ) != 0xff000000 )
                 {
-                    for ( int theta = 0; theta < 180; ++theta )
+                    for ( int theta = 0; theta < 360; ++theta )
                     {
                         int rho = ( int )(
                             x*Math.cos( ( theta * Math.PI ) / 180.0 ) +
@@ -476,15 +370,11 @@ ImageProcessor
             }
         }
 
-        int x = 0;
-        int y = 0;
         for ( int row = 0; row < accumulatorHeight; ++row )
         {
             for ( int col = 0; col < accumulatorWidth; ++col )
             {
                 int v = 255 * accumulator[ row ][ col ] / maxValue;
-                //int v = 255 - ( int )value;
-                //houghSpace.setRGB( col, row, Color.HSBtoRGB( 0.0f, 0.0f, v ) );
                 houghSpace.setRGB( col, row, new Color( v, v, v ).getRGB() );
             }
         }
@@ -492,12 +382,11 @@ ImageProcessor
         return houghSpace;
     }
 
-
     private ArrayList< HoughPoint >
     findMaxima( BufferedImage houghed )
     {
         ArrayList< HoughPoint > maxima = new ArrayList<>();
-        maxima.add( new HoughPoint( 0, 0, ( houghed.getRGB( 0, 0 ) & 0x00ffffff ) ) );
+        maxima.add( new HoughPoint( 0, 0, houghed.getRGB( 0, 0 ) ) );
 
         for ( int theta = 0; theta < houghed.getHeight(); ++theta )
         {
@@ -505,13 +394,13 @@ ImageProcessor
             {
                 if ( maxima.size() > 1 )
                 {
-                    Collections.sort( maxima, Collections.reverseOrder() );
+                    maxima.sort( Collections.reverseOrder() );
                 }
 
-                int value = ( houghed.getRGB( rho, theta ) & 0x00ffffff );
+                int value = houghed.getRGB( rho, theta );
 
                 int i = 0;
-                while ( ( i < maxima.size() ) && ( i < 20 ) )
+                while ( ( i < maxima.size() ) && ( i < this.nbOfLines ) )
                 {
                     if ( value > maxima.get( i ).value )
                     {
@@ -525,7 +414,6 @@ ImageProcessor
             }
         }
 
-        //return maxima;
         return new ArrayList<>( maxima.subList( 0, this.nbOfLines ) );
     }
 
@@ -550,27 +438,234 @@ ImageProcessor
         {
             int rho = c.rho;
             double theta = c.theta * ( 180 / Math.PI );
-            //System.out.println( "rho: "+rho+" ; theta: "+theta+" ; value: "+c.value );
-
 
             double cosT = Math.cos( c.theta );
             double sinT = Math.sin( c.theta );
             double x0 = cosT * rho;
             double y0 = sinT * rho;
 
-            int x1 = ( int ) ( x0 + 1000 * ( -sinT ) );
-            int y1 = ( int ) ( y0 + 1000 * (  cosT ) );
-            int x2 = ( int ) ( x0 - 1000 * ( -sinT ) );
-            int y2 = ( int ) ( y0 - 1000 * (  cosT ) );
+            int x1 = ( int ) ( x0 + 2*width * ( -sinT ) );
+            int y1 = ( int ) ( y0 + 2*width * (  cosT ) );
+            int x2 = ( int ) ( x0 - 2*width * ( -sinT ) );
+            int y2 = ( int ) ( y0 - 2*width * (  cosT ) );
 
             houghLines.drawLine( x1, y1, x2, y2 );
             houghPoints.drawLine( rho-5,   ( int )( theta ), rho+5,   ( int )( theta ) );
             houghPoints.drawLine(   rho, ( int )( theta )-5,   rho, ( int )( theta )+5 );
         }
+
         houghLines.dispose();
         houghPoints.dispose();
 
         return new BufferedImage[] { lined, houghImage };
+    }
+
+    public double[]
+    computeCoverage( int centerX, int centerY, double minRadiusX, double minRadiusY )
+    {
+        BufferedImage sobeled = Context.getInstance().getSobelImage();
+        int bestCoverage = 0;
+        double bestA = 0;
+        double bestB = 0;
+        double bestAlpha = 0.0;
+        int maxRadiusX = sobeled.getWidth();
+        int maxRadiusY = sobeled.getHeight();
+
+        // NOTE: 'a' is one radius, b is the other.
+        for ( int b = ( int )minRadiusY; b < maxRadiusY; b+=2 )
+        {
+            for ( int a = ( int )minRadiusX; a < maxRadiusX; a+=2 )
+            {
+                int previousX = 0;
+                int previousY = 0;
+
+                for ( double alpha = -( 0.5*Math.PI ); alpha < ( 0.5*Math.PI ); alpha+= 0.2 )
+                {
+                    int coverage = 0;
+                    double cosA = Math.cos( alpha );
+                    double sinA = Math.sin( alpha );
+
+                    for ( double t = 0.0; t < 2*Math.PI; t+=0.2 )
+                    {
+                        double cosT = Math.cos( t );
+                        double sinT = Math.sin( t );
+                        int x = ( int )( centerX + ( a*cosT*cosA - b*sinT*sinA ) );
+                        int y = ( int )( centerY + ( b*cosA*sinT + a*cosT*sinA ) );
+                        if ( ( x < sobeled.getWidth() ) && ( y < sobeled.getHeight() ) &&
+                             ( x > 0 ) && ( y > 0 ) &&
+                             ( sobeled.getRGB( x, y ) == 0xffffffff ) &&
+                             ( ( x != previousX ) || ( y != previousY ) ) )
+                        {
+                            coverage++;
+                            previousX = x;
+                            previousY = y;
+                        }
+                    }
+
+                    if ( coverage > bestCoverage )
+                    {
+                        bestCoverage = coverage;
+                        bestA = a;
+                        bestB = b;
+                        bestAlpha = alpha;
+                    }
+                }
+            }
+        }
+
+        return new double[] { bestA, bestB, bestAlpha };
+    }
+
+    public BufferedImage[]
+    drawHoughEllipses( BufferedImage houghed, int width, int height )
+    {
+        BufferedImage ellipsed = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
+
+        ArrayList< HoughPoint > maxima = findMaxima( houghed );
+
+        Graphics2D houghEllipses = ellipsed.createGraphics();
+        houghEllipses.drawImage( this.inputImage, 0, 0, null );
+        houghEllipses.setColor( Color.red );
+
+        int[][] pairsArray = new int[ maxima.size() ][ 2 ];
+        int[][] closestPair = new int[ 2 ][ 2 ];
+        for ( int i = 1; i < maxima.size(); ++i )
+        {
+            // NOTE: Standard equation of line: y = mx + b
+            //       If lines intersect, then m1*x + b1 = m2*x + b2
+            HoughPoint p1 = maxima.get( i-1 );
+            HoughPoint p2 = maxima.get( i );
+
+            double m1 = -( Math.cos( p1.theta ) / Math.sin( p1.theta ) );
+            double b1 = p1.rho / Math.sin( p1.theta );
+
+            double m2 = -( Math.cos( p2.theta ) / Math.sin( p2.theta ) );
+            double b2 = p2.rho / Math.sin( p2.theta );
+
+            pairsArray[ i-1 ][ 0 ] = ( int )( ( b2 - b1 ) / ( m1 - m2 ) );
+            pairsArray[ i-1 ][ 1 ] = ( int )( ( m1*b2 - m2*b1 ) / ( m1 - m2 ) );
+        }
+
+
+        /*  BRUTE-FORCE closest pair search.
+         *  Can do better.
+         *
+         * * * * */
+        double minDist = Double.MAX_VALUE;
+        for ( int j = 0; j < maxima.size()-1; ++j )
+        {
+            for ( int i = j+1; i < maxima.size(); ++i )
+            {
+                int x1x2 = pairsArray[ j ][ 0 ] - pairsArray[ i ][ 0 ];
+                int y1y2 = pairsArray[ j ][ 1 ] - pairsArray[ i ][ 1 ];
+                double dist = Math.sqrt( x1x2*x1x2 + y1y2*y1y2 );
+                if ( ( dist > 2 ) && ( dist < minDist ) )
+                {
+                    minDist = dist;
+                    closestPair[ 0 ][ 0 ] = pairsArray[ i ][ 0 ];
+                    closestPair[ 0 ][ 1 ] = pairsArray[ i ][ 1 ];
+                    closestPair[ 1 ][ 0 ] = pairsArray[ j ][ 0 ];
+                    closestPair[ 1 ][ 1 ] = pairsArray[ j ][ 1 ];
+                }
+            }
+        }
+
+
+        int centerX = 0;
+        int centerY = 0;
+
+        if ( closestPair[ 0 ][ 0 ] > closestPair[ 1 ][ 0 ] )
+            centerX = ( closestPair[ 0 ][ 0 ] + closestPair[ 1 ][ 0 ] ) / 2;
+        else if ( closestPair[ 0 ][ 0 ] < closestPair[ 1 ][ 0 ] )
+            centerX = ( closestPair[ 1 ][ 0 ] + closestPair[ 0 ][ 0 ] ) / 2;
+
+        if ( closestPair[ 0 ][ 1 ] > closestPair[ 1 ][ 1 ] )
+            centerY = ( closestPair[ 0 ][ 1 ] + closestPair[ 1 ][ 1 ] ) / 2;
+        else if ( closestPair[ 0 ][ 1 ] < closestPair[ 1 ][ 1 ] )
+            centerY = ( closestPair[ 1 ][ 1 ] + closestPair[ 0 ][ 1 ] ) / 2;
+
+        int minRadiusX = 1;
+        int minRadiusY = 1;
+        double[] radii = new double[] { minRadiusX, minRadiusY, 0 };
+
+        for ( int i = 0; i < this.ellipsesCount; ++i )
+        {
+            radii = computeCoverage( centerX, centerY, radii[ 0 ]+1.0, radii[ 1 ]+1.0 );
+
+            if ( this.showEllipsesFound )
+            {
+                houghEllipses.setColor( Color.cyan );
+                houghEllipses.setStroke( new BasicStroke( 2 ) );
+
+                for ( double t = 0.0; t < 360.0; t+=0.5 )
+                {
+                    double cosA = Math.cos( radii[ 2 ] );
+                    double sinA = Math.sin( radii[ 2 ] );
+                    double cosT = Math.cos( t * 180 / Math.PI );
+                    double sinT = Math.sin( t * 180 / Math.PI );
+                    double a = radii[ 0 ];
+                    double b = radii[ 1 ];
+                    int x = ( int )( centerX + ( a*cosT*cosA - b*sinT*sinA ) );
+                    int y = ( int )( centerY + ( b*cosA*sinT + a*cosT*sinA ) );
+                    houghEllipses.drawLine( x, y, x, y );
+                }
+            }
+        }
+
+        if ( this.showEllipseCenter )
+        {
+            houghEllipses.setColor( Color.cyan );
+            houghEllipses.setStroke( new BasicStroke( 2 ) );
+
+            houghEllipses.drawLine( centerX-5,   centerY, centerX+5,   centerY );
+            houghEllipses.drawLine(   centerX, centerY-5,   centerX, centerY+5 );
+        }
+
+        double step = 0.1;
+        GeneralPath ellipse = new GeneralPath( GeneralPath.WIND_EVEN_ODD, ( int )( 360.0/step ) );
+
+        double cosA = Math.cos( radii[ 2 ] );
+        double sinA = Math.sin( radii[ 2 ] );
+        double cosT = Math.cos( 0.0 );
+        double sinT = Math.sin( 0.0 );
+        double a = radii[ 0 ];
+        double b = radii[ 1 ];
+        int x = ( int )( centerX + ( a*cosT*cosA - b*sinT*sinA ) );
+        int y = ( int )( centerY + ( b*cosA*sinT + a*cosT*sinA ) );
+
+        ellipse.moveTo( x, y );
+
+        for ( double t = step; t < 2.0*Math.PI; t+=step )
+        {
+            cosA = Math.cos( radii[ 2 ] );
+            sinA = Math.sin( radii[ 2 ] );
+            cosT = Math.cos( t );
+            sinT = Math.sin( t );
+            a = radii[ 0 ];
+            b = radii[ 1 ];
+            x = ( int )( centerX + ( a*cosT*cosA - b*sinT*sinA ) );
+            y = ( int )( centerY + ( b*cosA*sinT + a*cosT*sinA ) );
+
+            ellipse.lineTo( x, y );
+        }
+
+        ellipse.closePath();
+
+        for ( int row = 0; row < height; ++row )
+        {
+            for ( int col = 0; col < width; ++col )
+            {
+                if ( !ellipse.contains( col, row ) )
+                {
+                    houghEllipses.setColor( Color.black );
+                    houghEllipses.drawLine( col, row, col, row );
+                }
+            }
+        }
+
+        houghEllipses.dispose();
+
+        return new BufferedImage[] { ellipsed, null };
     }
 
 }

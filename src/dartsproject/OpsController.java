@@ -4,10 +4,13 @@
  *
  *  ====================
  *  Description:
- *
+ *      This controller is in charge of the operations available through the panel
+  *     on the right-hand side of the application window. It communicates the different
+  *     options to the implementation of the algorithms.
  *
  *  ====================
  *  Sources:
+ *      http://code.makery.ch/blog/javafx-2-event-handlers-and-change-listeners/
  *
  *  ====================
  *  Author:
@@ -42,8 +45,18 @@ OpsController implements Initializable
 
     @FXML private Slider houghLinesNb;
     @FXML private Label houghLinesLabel;
-    @FXML private CheckBox useBlurSobel;
-    @FXML private CheckBox useBlurHough;
+    @FXML private CheckBox useBlur;
+    @FXML private CheckBox useThresholding;
+    @FXML private CheckBox useBlobAnalysis;
+    @FXML private CheckBox useThinning;
+    @FXML private Slider lowThresh;
+    @FXML private Label lowThreshLabel;
+    @FXML private Slider highThresh;
+    @FXML private Label highThreshLabel;
+    @FXML private Slider nbOfEllipses;
+    @FXML private Label nbOfEllipsesLabel;
+    @FXML private CheckBox showCenterOfEllipse;
+    @FXML private CheckBox showFoundEllipses;
 
 
     @Override
@@ -53,9 +66,53 @@ OpsController implements Initializable
         houghLinesNb.valueProperty().addListener(
             ( observable, oldValue, newValue ) -> {
                 houghLinesLabel.textProperty().setValue(
-                        "Hough lines : " + String.valueOf( newValue.intValue() ) );
+                        "Hough lines: " + String.valueOf( newValue.intValue() ) );
                 proc.setNbOfLines( newValue.intValue() );
             }
+        );
+
+        lowThresh.valueProperty().addListener(
+            ( observable, oldValue, newValue ) -> {
+                lowThreshLabel.textProperty().setValue(
+                        "Low Thresh.: " + String.valueOf( newValue.floatValue() ) );
+                proc.setSobelLoThresh( newValue.floatValue() );
+            }
+        );
+
+        highThresh.valueProperty().addListener(
+            ( observable, oldValue, newValue ) -> {
+                highThreshLabel.textProperty().setValue(
+                        "High Thresh.: " + String.valueOf( newValue.floatValue() ) );
+                proc.setSobelHiThresh( newValue.floatValue() );
+            }
+        );
+
+        useThresholding.selectedProperty().addListener(
+            ( observable, oldValue, newValue ) -> proc.setThresholding( newValue )
+        );
+
+        useBlobAnalysis.selectedProperty().addListener(
+                ( observable, oldValue, newValue ) -> proc.setBlobAnalysis( newValue )
+        );
+
+        useThinning.selectedProperty().addListener(
+                ( observable, oldValue, newValue ) -> proc.setThinning( newValue )
+        );
+
+        nbOfEllipses.valueProperty().addListener(
+                ( observable, oldValue, newValue ) -> {
+                    nbOfEllipsesLabel.textProperty().setValue(
+                            "Ellipses Count: " + String.valueOf( newValue.intValue() ) );
+                    proc.setEllipsesCount( newValue.intValue() );
+                }
+        );
+
+        showCenterOfEllipse.selectedProperty().addListener(
+                ( observable, oldValue, newValue ) -> proc.setShowEllipseCenter( newValue )
+        );
+
+        showFoundEllipses.selectedProperty().addListener(
+                ( observable, oldValue, newValue ) -> proc.setShowEllipsesFound( newValue )
         );
     }
 
@@ -63,12 +120,25 @@ OpsController implements Initializable
     init( MainController mainController )
     {
         this.mainCtrl = mainController;
+        useBlur.setSelected( true );
+        useThresholding.setSelected( true );
+        useBlobAnalysis.setSelected( false );
+        useThinning.setSelected( true );
+
+        this.proc.setThresholding( true );
+        this.proc.setSobelLoThresh( ( float )lowThresh.getValue() );
+        this.proc.setSobelHiThresh( ( float )highThresh.getValue() );
+        this.proc.setBlobAnalysis( true );
+        this.proc.setThinning( true );
+        this.proc.setEllipsesCount( ( int )nbOfEllipses.getValue() );
     }
 
 
     public void
     runBlur()
     {
+        long startTime;
+        long endTime;
         BufferedImage loaded;
         BufferedImage blurred;
 
@@ -78,8 +148,15 @@ OpsController implements Initializable
 
             proc.setInputImage( loaded );
             proc.setKernel( new BlurKernel() );
+
+            startTime = System.nanoTime();
+
             blurred = proc.runKernel();
-            this.mainCtrl.updateBlurView( SwingFXUtils.toFXImage( blurred, null ) );
+            mainCtrl.updateBlurView( SwingFXUtils.toFXImage( blurred, null ) );
+
+            endTime = System.nanoTime();
+            double time = 0.000001 * ( endTime - startTime );
+            mainCtrl.setExecTime( "Exec. Time: "+String.format( "%.3f",time )+"ms" );
         }
         catch ( IOException e )
         {
@@ -88,14 +165,10 @@ OpsController implements Initializable
     }
 
     public void
-    doThinning(  )
-    {
-
-    }
-
-    public void
     runSobel()
     {
+        long startTime;
+        long endTime;
         BufferedImage loaded;
         BufferedImage result;
         BufferedImage blurred;
@@ -106,17 +179,25 @@ OpsController implements Initializable
 
             proc.setInputImage( loaded );
 
-            if ( useBlurSobel.isSelected() )
+            startTime = System.nanoTime();
+
+            if ( useBlur.isSelected() )
             {
                 proc.setKernel( new BlurKernel() );
                 blurred = proc.runKernel();
-                this.mainCtrl.updateBlurView( SwingFXUtils.toFXImage( blurred, null ) );
+
+                mainCtrl.updateBlurView( SwingFXUtils.toFXImage( blurred, null ) );
                 proc.setInputImage( blurred );
             }
 
             proc.setKernel( new SobelKernel() );
             result = proc.runKernel();
-            this.mainCtrl.updateSobelView( SwingFXUtils.toFXImage( result, null ) );
+
+            mainCtrl.updateSobelView( SwingFXUtils.toFXImage( result, null ) );
+
+            endTime = System.nanoTime();
+            double time = 0.000001 * ( endTime - startTime );
+            mainCtrl.setExecTime( "Exec. Time: "+String.format( "%.3f",time )+"ms" );
         }
         catch ( IOException e )
         {
@@ -125,8 +206,10 @@ OpsController implements Initializable
     }
 
     public void
-    runHough()
+    runHoughLines()
     {
+        long startTime;
+        long endTime;
         BufferedImage loaded;
         BufferedImage sobeled;
         BufferedImage houghed;
@@ -138,22 +221,31 @@ OpsController implements Initializable
 
             proc.setInputImage( loaded );
 
-            if ( useBlurHough.isSelected() )
+            startTime = System.nanoTime();
+
+            if ( useBlur.isSelected() )
             {
                 proc.setKernel( new BlurKernel() );
                 blurred = proc.runKernel();
-                this.mainCtrl.updateBlurView( SwingFXUtils.toFXImage( blurred, null ) );
+                mainCtrl.updateBlurView( SwingFXUtils.toFXImage( blurred, null ) );
                 proc.setInputImage( blurred );
             }
 
             proc.setKernel( new SobelKernel() );
 
             sobeled = proc.runKernel();
-            this.mainCtrl.updateSobelView( SwingFXUtils.toFXImage( sobeled, null ) );
+            mainCtrl.updateSobelView( SwingFXUtils.toFXImage( sobeled, null ) );
 
-            houghed = proc.runHough( sobeled );
+            houghed = proc.runHoughLines( sobeled );
+
             Context.getInstance().setHoughAccu( houghed );
-            this.mainCtrl.updateAccumulatorView( SwingFXUtils.toFXImage( houghed, null ) );
+            mainCtrl.updateAccumulatorView( SwingFXUtils.toFXImage( houghed, null ) );
+
+            drawHoughLines();
+
+            endTime = System.nanoTime();
+            double time = 0.000001 * ( endTime - startTime );
+            mainCtrl.setExecTime( "Exec. Time: "+String.format( "%.3f",time )+"ms" );
         }
         catch ( IOException e )
         {
@@ -162,16 +254,94 @@ OpsController implements Initializable
     }
 
     public void
-    drawHoughLines() throws IOException
+    runEllipsesDetection()
     {
-        BufferedImage loaded = ImageIO.read( Context.getInstance().getCurrentFile() );
-        BufferedImage houghed = Context.getInstance().getHoughAccu();
-        BufferedImage lined[];
+        long startTime;
+        long endTime;
 
-        proc.setInputImage( loaded );
-        lined = proc.drawHoughLines( houghed, loaded.getWidth(), loaded.getHeight() );
-        this.mainCtrl.updateAccumulatorView( SwingFXUtils.toFXImage( lined[ 1 ], null ) );
-        this.mainCtrl.updateResultView( SwingFXUtils.toFXImage( lined[ 0 ], null ) );
+        BufferedImage loaded;
+        BufferedImage sobeled;
+        BufferedImage houghed;
+        BufferedImage blurred;
+
+        try
+        {
+            loaded = ImageIO.read( Context.getInstance().getCurrentFile() );
+
+            proc.setInputImage( loaded );
+
+            startTime = System.nanoTime();
+            if ( useBlur.isSelected() )
+            {
+                proc.setKernel( new BlurKernel() );
+                blurred = proc.runKernel();
+                mainCtrl.updateBlurView( SwingFXUtils.toFXImage( blurred, null ) );
+                proc.setInputImage( blurred );
+            }
+
+            proc.setKernel( new SobelKernel() );
+
+            sobeled = proc.runKernel();
+            Context.getInstance().setSobelImage( sobeled );
+            mainCtrl.updateSobelView( SwingFXUtils.toFXImage( Context.getInstance().getSobelImage(), null ) );
+
+            houghed = proc.runHoughLines( sobeled );
+            Context.getInstance().setHoughAccu( houghed );
+            mainCtrl.updateAccumulatorView( SwingFXUtils.toFXImage( houghed, null ) );
+
+            drawHoughEllipses();
+
+            endTime = System.nanoTime();
+            double time = 0.000001 * ( endTime - startTime );
+            mainCtrl.setExecTime( "Exec. Time: "+String.format( "%.3f",time )+"ms" );
+        }
+        catch ( IOException e )
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void
+    drawHoughLines()
+    {
+        try
+        {
+            BufferedImage loaded = ImageIO.read( Context.getInstance().getCurrentFile() );
+            BufferedImage houghed = Context.getInstance().getHoughAccu();
+            BufferedImage lined[];
+
+            proc.setInputImage( loaded );
+            lined = proc.drawHoughLines( houghed, loaded.getWidth(), loaded.getHeight() );
+            mainCtrl.updateAccumulatorView( SwingFXUtils.toFXImage( lined[ 1 ], null ) );
+            mainCtrl.updateLinesResultView( SwingFXUtils.toFXImage( lined[ 0 ], null ) );
+        }
+        catch ( IOException e )
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void
+    drawHoughEllipses()
+    {
+        try
+        {
+            BufferedImage loaded = ImageIO.read( Context.getInstance().getCurrentFile() );
+            BufferedImage houghed = Context.getInstance().getHoughAccu();
+            BufferedImage ellipsed[];
+
+            proc.setInputImage( loaded );
+            ellipsed = proc.drawHoughEllipses( houghed, loaded.getWidth(), loaded.getHeight() );
+            if ( ellipsed[ 1 ] != null )
+            {
+                mainCtrl.updateAccumulatorView( SwingFXUtils.toFXImage( ellipsed[ 1 ], null ) );
+            }
+            mainCtrl.updateEllipsesResultView( SwingFXUtils.toFXImage( ellipsed[ 0 ], null ) );
+        }
+        catch ( IOException e )
+        {
+            e.printStackTrace();
+        }
     }
 
 }
