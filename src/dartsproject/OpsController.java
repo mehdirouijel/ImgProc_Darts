@@ -287,8 +287,8 @@ OpsController implements Initializable
 
             houghed = proc.runHoughLines( sobeled );
             Context.getInstance().setHoughAccu( houghed );
-            mainCtrl.updateAccumulatorView( SwingFXUtils.toFXImage( houghed, null ) );
 
+            drawHoughLines();
             drawHoughEllipses();
 
             endTime = System.nanoTime();

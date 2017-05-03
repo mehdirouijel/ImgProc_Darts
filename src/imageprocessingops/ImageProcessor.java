@@ -479,9 +479,10 @@ ImageProcessor
                 int previousX = 0;
                 int previousY = 0;
 
-                for ( double alpha = -( 0.5*Math.PI ); alpha < ( 0.5*Math.PI ); alpha+= 0.2 )
+                for ( double alpha = 0; alpha < ( 0.5*Math.PI ); alpha+=0.2 )
                 {
                     int coverage = 0;
+
                     double cosA = Math.cos( alpha );
                     double sinA = Math.sin( alpha );
 
@@ -489,17 +490,22 @@ ImageProcessor
                     {
                         double cosT = Math.cos( t );
                         double sinT = Math.sin( t );
-                        int x = ( int )( centerX + ( a*cosT*cosA - b*sinT*sinA ) );
-                        int y = ( int )( centerY + ( b*cosA*sinT + a*cosT*sinA ) );
+                        double tmpX = centerX + a*cosT;
+                        double tmpY = centerY + b*sinT;
+
+                        // NOTE: Apply rotation.
+                        int x = ( int )( tmpX*cosA + tmpY*sinA );
+                        int y = ( int )( tmpY*cosA - tmpX*sinA );
+
                         if ( ( x < sobeled.getWidth() ) && ( y < sobeled.getHeight() ) &&
                              ( x > 0 ) && ( y > 0 ) &&
                              ( sobeled.getRGB( x, y ) == 0xffffffff ) &&
                              ( ( x != previousX ) || ( y != previousY ) ) )
                         {
                             coverage++;
-                            previousX = x;
-                            previousY = y;
                         }
+                        previousX = x;
+                        previousY = y;
                     }
 
                     if ( coverage > bestCoverage )
