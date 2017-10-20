@@ -46,7 +46,7 @@ SobelKernel extends ConvoKernel
             { -1.0f, -2.0f, -1.0f }
         };
 
-        this.divisor = 1.0f;
+        this.divisor = 4.0f;
     }
 
     @Override
